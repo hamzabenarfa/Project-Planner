@@ -1,0 +1,38 @@
+export const fakeProjects = [
+  {
+    id: 1,
+    title: "Project 1",
+    status: "Started",
+    tasksCompleted: 7,
+    totalTasks: 11,
+    progress: 64,
+    lastUpdated: "1 day ago",
+  },
+  {
+    id: 2,
+    title: "Project 2",
+    status: "Pending",
+    tasksCompleted: 3,
+    totalTasks: 8,
+    progress: 37,
+    lastUpdated: "2 days ago",
+  },
+  {
+    id: 3,
+    title: "Project 3",
+    status: "In Progress",
+    tasksCompleted: 11,
+    totalTasks: 11,
+    progress: 100,
+    lastUpdated: "3 days ago",
+  },
+  {
+    id: 4,
+    title: "Project 4",
+    status: "Building",
+    tasksCompleted: 11,
+    totalTasks: 11,
+    progress: 100,
+    lastUpdated: "3 days ago",
+  },
+];
