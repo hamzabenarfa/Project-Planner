@@ -7,6 +7,7 @@ import { ProjectModule } from './project/project.module';
 import { UserModule } from './user/user.module';
 import { TeamModule } from './team/team.module';
 import { TeamMembersModule } from './team-members/team-members.module';
+import { ProjectMemebersModule } from './project_memebers/project_memebers.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { TeamMembersModule } from './team-members/team-members.module';
     UserModule,
     TeamModule,
     TeamMembersModule,
+    ProjectMemebersModule,
   ],
   controllers: [],
   providers: [
