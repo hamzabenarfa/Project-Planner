@@ -1,4 +1,11 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Param,
+  ParseIntPipe,
+  Get,
+} from '@nestjs/common';
 import { TeamMembersService } from './team-members.service';
 import { CreateTeamMemberDto } from './dto/create-team-member.dto';
 import { GetCurrentUserId } from 'src/common/decorators';
@@ -15,11 +22,21 @@ export class TeamMembersController {
     return this.teamMembersService.create(dto, userId);
   }
 
-  @Post('add-existing-member')
+  @Post('add-existing-member/:memberId')
   addExistingMember(
-    @Body() memberId: number,
+    @Param('memberId', ParseIntPipe) memberId: number,
     @GetCurrentUserId() userId: number,
   ) {
     return this.teamMembersService.addExistingMember(memberId, userId);
+  }
+
+  @Get('my-team')
+  getMyTeam(@GetCurrentUserId() userId: number) {
+    return this.teamMembersService.getMyTeam(userId);
+  }
+
+  @Get('my-team-formated')
+  getMyTeamFormated(@GetCurrentUserId() userId: number) {
+    return this.teamMembersService.getMyTeamFormated(userId);
   }
 }
