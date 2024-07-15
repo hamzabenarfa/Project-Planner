@@ -4,17 +4,18 @@ import {
   HttpCode,
   HttpStatus,
   Post,
+  Res,
   UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthDto } from './dto';
-import { Tokens } from './types';
 import { AtGuard, RtGuard } from 'src/common/guards';
 import {
   GetCurrentUser,
   GetCurrentUserId,
   Public,
 } from 'src/common/decorators';
+import { Response } from 'express';
 
 @Controller('auth')
 export class AuthController {
@@ -23,20 +24,48 @@ export class AuthController {
   @Public()
   @Post('local/signup')
   @HttpCode(HttpStatus.CREATED)
-  signupLocal(@Body() dto: AuthDto): Promise<Tokens> {
-    return this.authService.signupLocal(dto);
+  async signupLocal(
+    @Body() dto: AuthDto,
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<{ access_token: string }> {
+    const tokens = await this.authService.signupLocal(dto);
+    res.cookie('refresh_token', tokens.refresh_token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'lax',
+      maxAge: 7 * 24 * 60 * 60 * 100,
+    });
+    return { access_token: tokens.access_token };
   }
   @Public()
   @Post('local/signin')
   @HttpCode(HttpStatus.OK)
-  signinLocal(@Body() dto: AuthDto): Promise<Tokens> {
-    return this.authService.signinLocal(dto);
+  async signinLocal(
+    @Body() dto: AuthDto,
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<{ access_token: string }> {
+    const tokens = await this.authService.signinLocal(dto);
+    res.cookie('refresh_token', tokens.refresh_token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'lax',
+      maxAge: 7 * 24 * 60 * 60 * 100,
+    });
+    return { access_token: tokens.access_token };
   }
 
   @UseGuards(AtGuard)
   @Post('logout')
   @HttpCode(HttpStatus.OK)
-  logout(@GetCurrentUserId() userId: number): Promise<boolean> {
+  logout(
+    @GetCurrentUserId() userId: number,
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<boolean> {
+    res.clearCookie('refresh_token', {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'lax',
+    });
     return this.authService.logout(userId);
   }
 
@@ -44,10 +73,18 @@ export class AuthController {
   @UseGuards(RtGuard)
   @Post('refresh')
   @HttpCode(HttpStatus.OK)
-  refresh(
+  async refresh(
     @GetCurrentUserId() userId: number,
     @GetCurrentUser('refreshToken') refreshToken: string,
-  ): Promise<Tokens> {
-    return this.authService.refresh(userId, refreshToken);
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const tokens = await this.authService.refresh(userId, refreshToken);
+    res.cookie('refresh_token', tokens.refresh_token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'strict',
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+    return { access_token: tokens.access_token };
   }
 }

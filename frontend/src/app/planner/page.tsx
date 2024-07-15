@@ -1,7 +1,7 @@
 const Planner = () => {
     return ( 
-        <div>
-        az
+        <div className=" container">
+            Planner
         </div>
      );
 }

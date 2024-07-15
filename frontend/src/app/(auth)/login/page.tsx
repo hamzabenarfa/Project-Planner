@@ -24,7 +24,7 @@ const Login = () => {
         </CardHeader>
         <CardContent>
           <Label htmlFor="email">Your email address</Label>
-          <Input label="Email" type="email" />
+          <Input label="email" type="email" />
 
           <Label htmlFor="Password">Your Password</Label>
           <Input label="Password" type="password" />

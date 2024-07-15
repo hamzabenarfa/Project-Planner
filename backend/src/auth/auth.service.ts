@@ -13,6 +13,12 @@ export class AuthService {
   ) {}
 
   async signupLocal(dto: AuthDto): Promise<Tokens> {
+    const user = await this.prisma.user.findUnique({
+      where: {
+        email: dto.email,
+      },
+    });
+    if (user) throw new ForbiddenException('User Exists');
     const hash = await argon.hash(dto.password);
 
     const newUser = await this.prisma.user.create({
@@ -91,7 +97,7 @@ export class AuthService {
     const [at, rt] = await Promise.all([
       this.jwtService.signAsync(
         { sub: userId, email },
-        { secret: 'at-secret', expiresIn: '15m' },
+        { secret: 'at-secret', expiresIn: '15h' },
       ),
       this.jwtService.signAsync(
         { sub: userId, email },
