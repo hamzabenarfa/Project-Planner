@@ -27,7 +27,7 @@ export class AuthController {
   async signupLocal(
     @Body() dto: AuthDto,
     @Res({ passthrough: true }) res: Response,
-  ): Promise<{ access_token: string }> {
+  ): Promise<{ access_token: string; refresh_token: string }> {
     const tokens = await this.authService.signupLocal(dto);
     res.cookie('refresh_token', tokens.refresh_token, {
       httpOnly: true,
@@ -35,7 +35,10 @@ export class AuthController {
       sameSite: 'lax',
       maxAge: 7 * 24 * 60 * 60 * 100,
     });
-    return { access_token: tokens.access_token };
+    return {
+      access_token: tokens.access_token,
+      refresh_token: tokens.refresh_token,
+    };
   }
   @Public()
   @Post('local/signin')
@@ -43,7 +46,7 @@ export class AuthController {
   async signinLocal(
     @Body() dto: AuthDto,
     @Res({ passthrough: true }) res: Response,
-  ): Promise<{ access_token: string }> {
+  ): Promise<{ access_token: string; refresh_token: string }> {
     const tokens = await this.authService.signinLocal(dto);
     res.cookie('refresh_token', tokens.refresh_token, {
       httpOnly: true,
@@ -51,7 +54,10 @@ export class AuthController {
       sameSite: 'lax',
       maxAge: 7 * 24 * 60 * 60 * 100,
     });
-    return { access_token: tokens.access_token };
+    return {
+      access_token: tokens.access_token,
+      refresh_token: tokens.refresh_token,
+    };
   }
 
   @UseGuards(AtGuard)
