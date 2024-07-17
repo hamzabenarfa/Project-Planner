@@ -1,8 +1,7 @@
 "use server";
 
 import { cookies } from "next/headers";
-import { jwtDecode } from "jwt-decode";
-import axios from "axios";
+import {jwtDecode} from "jwt-decode";
 
 export default async function loginAction(_prevState: any, formData: FormData) {
   const email = formData.get("email");
@@ -18,25 +17,64 @@ export default async function loginAction(_prevState: any, formData: FormData) {
 
   const json = await res.json();
 
-  setAuthCookie(res); 
   if (res.ok) {
+    setAuthCookie(res);
     return;
   } else {
     return json.error;
   }
 }
 
-const setAuthCookie = (response: Response) => {
+const setAuthCookie = (response:Response) => {
   const setCookieHeader = response.headers.get("Set-Cookie");
-  console.log("🚀 ~ setAuthCookie ~ setCookieHeader:", setCookieHeader)
-  if (setCookieHeader) {
-    const token = setCookieHeader.split(";")[0].split("=")[1];
+
+  if (!setCookieHeader) return;
+
+  const cookiesArray = setCookieHeader.split(", ");
+
+  let accessToken = "";
+  let refreshToken = "";
+
+  cookiesArray.forEach((cookie) => {
+    if (cookie.startsWith("access_token=")) {
+      accessToken = cookie.substring(
+        "access_token=".length,
+        cookie.indexOf(";")
+      );
+    } else if (cookie.startsWith("refresh_token=")) {
+      refreshToken = cookie.substring(
+        "refresh_token=".length,
+        cookie.indexOf(";")
+      );
+    }
+  });
+
+  console.log("Access Token:", accessToken);
+  console.log("Refresh Token:", refreshToken);
+
+  if (accessToken) {
+    const decodedAccessToken = jwtDecode(accessToken);
     cookies().set({
-      name: "Authentication",
-      value: token,
+      name: "access_token",
+      value: accessToken,
       secure: true,
       httpOnly: true,
-      expires: new Date(jwtDecode(token).exp! * 1000),
+      expires: new Date(decodedAccessToken.exp! * 1000),
+      sameSite: "lax",
+      path: "/"
+    });
+  }
+
+  if (refreshToken) {
+    const decodedRefreshToken = jwtDecode(refreshToken);
+    cookies().set({
+      name: "refresh_token",
+      value: refreshToken,
+      secure: true,
+      httpOnly: true,
+      expires: new Date(decodedRefreshToken.exp! * 1000),
+      sameSite: "lax",
+      path: "/"
     });
   }
 };
