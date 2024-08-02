@@ -4,9 +4,9 @@ export class CreateProjectDto {
   @IsString()
   name: string;
 
-  createdAt: Date;
-  updatedAt: Date;
+  // createdAt: Date;
+  // updatedAt: Date;
 
-  @IsNumber()
-  ownerId: number;
+  // @IsNumber()
+  // ownerId: number;
 }

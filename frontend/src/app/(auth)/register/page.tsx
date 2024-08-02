@@ -40,7 +40,7 @@ const Register = () => {
 
           <Select>
             <SelectTrigger className="w-full">
-              <SelectValue placeholder="Theme" />
+              <SelectValue placeholder="Role" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="PERSONAL">Personal</SelectItem>

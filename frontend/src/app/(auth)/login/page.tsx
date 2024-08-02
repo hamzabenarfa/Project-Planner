@@ -12,12 +12,38 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
-
-import { useFormState } from "react-dom";
-import loginAction from "./login";
+import axios from "axios";
+import { useState } from "react";
 
 const Login = () => {
-  const [error, formAction] = useFormState(loginAction, undefined);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+
+    try {
+      const response = await fetch('/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        console.log("Login successful");
+      } else {
+        setError(data.message);
+      }
+    } catch (error) {
+      setError("An unexpected error occurred");
+    }
+  };
   return (
     <div className="container min-h-screen flex items-center justify-center md:justify-around">
       <Image
@@ -34,12 +60,22 @@ const Login = () => {
           <CardDescription>Please login to our platform</CardDescription>
         </CardHeader>
         <CardContent>
-          <form action={formAction}>
+          <form onSubmit={handleSubmit}>
             <Label htmlFor="email">Your email address</Label>
-            <Input id="email" type="email" name="email" />
+            <Input
+              id="email"
+              type="email"
+              name="email"
+              onChange={(e) => setEmail(e.target.value)}
+            />
 
             <Label htmlFor="password">Your Password</Label>
-            <Input type="password" id="password" name="password" />
+            <Input
+              type="password"
+              id="password"
+              name="password"
+              onChange={(e) => setPassword(e.target.value)}
+            />
 
             <Button className="mt-4 w-full" type="submit">
               Login
