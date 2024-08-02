@@ -4,30 +4,35 @@ import { Layers, Pin } from "lucide-react";
 import ProjectCard from "./project-card";
 import { Button } from "@/components/ui/button";
 import { fakeProjects } from "./fakedata";
-import { useEffect, useState } from 'react';
-import axiosInstance from '@/app/axios-instance'
+import { useEffect, useState } from "react";
+import axiosInstance from "@/lib/axios-instance";
+
+type ProejctType = {
+  id: number;
+  name: string;
+  createdAt: Date;
+  updatedAt: Date;
+  ownerId: number;
+};
 const Project = () => {
   const [data, setData] = useState({});
   useEffect(() => {
     const fetchData = async () => {
-        try {
-            const response = await axiosInstance('project/mine');
-            console.log("🚀 ~ fetchData ~ response:", response)
-           
-           
-            setData(response.data);
-        } catch (err) {
-            console.log("🚀 ~ fetchData ~ err:", err)
-            
-        }
+      try {
+        const response = await axiosInstance<ProejctType[]>("/project/mine");
+        console.log("🚀 ~ fetchData ~ response:", response);
+
+        setData(response.data);
+      } catch (err) {
+        console.log("🚀 ~ fetchData ~ err:", err);
+      }
     };
 
     fetchData();
-}, []);
+  }, []);
 
-console.log(data)
+  console.log(data);
 
-  
   return (
     <div className="  min-h-screen container ">
       <section className=" space-y-4 p-4">

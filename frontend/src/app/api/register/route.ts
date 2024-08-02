@@ -2,30 +2,29 @@ import { NextResponse } from 'next/server';
 import axios from 'axios';
 import { setCookies } from '@/lib/cookieUtils';
 
-interface LoginRequestBody {
+interface RegisterRequestBody {
   email: string;
   password: string;
 }
 
 export async function POST(request: Request) {
-  const { email, password }: LoginRequestBody = await request.json();
+  const { email, password }: RegisterRequestBody = await request.json();
 
   try {
-
-    const response = await axios.post("http://localhost:4000/auth/local/signin", { email, password }, {
+    const response = await axios.post("http://localhost:4000/auth/local/register", { email, password }, {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
       },
-      withCredentials: true 
+      withCredentials: true
     });
 
-    if (response.status === 200) {
-      const responseObj = NextResponse.json({ message: "Login successful" });
+    if (response.status === 201) {
+      const responseObj = NextResponse.json({ message: "Registration successful" });
 
       const cookies = response.headers['set-cookie'];
       if (cookies) {
-        setCookies( cookies);
+        setCookies(responseObj, cookies);
       }
 
       return responseObj;
@@ -33,6 +32,6 @@ export async function POST(request: Request) {
       return NextResponse.json({ message: response.data.message }, { status: response.status });
     }
   } catch (error) {
-    return NextResponse.json({ message: error.response.data.message }, { status: 500 });
+    return NextResponse.json({ message: "An unexpected error occurred" }, { status: 500 });
   }
 }

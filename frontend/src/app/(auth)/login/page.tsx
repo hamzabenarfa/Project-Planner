@@ -12,15 +12,15 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
-import axios from "axios";
 import { useState } from "react";
+import Toast from "react-hot-toast";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError("");
 
@@ -36,12 +36,12 @@ const Login = () => {
       const data = await response.json();
 
       if (response.ok) {
-        console.log("Login successful");
+        Toast.success(data.message)
       } else {
-        setError(data.message);
+        Toast.error(data.message)
       }
     } catch (error) {
-      setError("An unexpected error occurred");
+      Toast.error(error)
     }
   };
   return (
