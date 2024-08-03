@@ -27,7 +27,7 @@ export class AuthService {
         hash,
       },
     });
-    const tokens = await this.getTokens(newUser.id, newUser.email);
+    const tokens = await this.getTokens(newUser.id, newUser.email, user.role);
     await this.updateRtHash(newUser.id, tokens.refresh_token);
     return tokens;
   }
@@ -43,7 +43,7 @@ export class AuthService {
     const passwordMatches = await argon.verify(user.hash, dto.password);
     if (!passwordMatches) throw new ForbiddenException('Password Incorrect');
 
-    const tokens = await this.getTokens(user.id, user.email);
+    const tokens = await this.getTokens(user.id, user.email, user.role);
     await this.updateRtHash(user.id, tokens.refresh_token);
 
     return tokens;
@@ -75,7 +75,7 @@ export class AuthService {
     const rtMatches = await argon.verify(user.hashRt, rt);
     if (!rtMatches) throw new ForbiddenException('Access Denied');
 
-    const tokens = await this.getTokens(user.id, user.email);
+    const tokens = await this.getTokens(user.id, user.email, user.role);
     await this.updateRtHash(user.id, tokens.refresh_token);
 
     return tokens;
@@ -93,14 +93,18 @@ export class AuthService {
     });
   }
 
-  async getTokens(userId: number, email: string): Promise<Tokens> {
+  async getTokens(
+    userId: number,
+    email: string,
+    role: string,
+  ): Promise<Tokens> {
     const [at, rt] = await Promise.all([
       this.jwtService.signAsync(
-        { sub: userId, email },
+        { sub: userId, email, role },
         { secret: 'at-secret', expiresIn: '15m' },
       ),
       this.jwtService.signAsync(
-        { sub: userId, email },
+        { sub: userId, email, role },
         { secret: 'rt-secret', expiresIn: '7d' },
       ),
     ]);

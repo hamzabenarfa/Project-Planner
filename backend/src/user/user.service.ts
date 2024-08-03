@@ -26,7 +26,7 @@ export class UserService {
     return { id: newUser.id, email: newUser.email, role: newUser.role };
   }
   async findAllExeptMe(userId: number) {
-    return this.prisma.user.findMany({
+    return await this.prisma.user.findMany({
       where: {
         NOT: {
           id: userId,
