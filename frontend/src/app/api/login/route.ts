@@ -11,8 +11,7 @@ export async function POST(request: Request) {
   const { email, password }: LoginRequestBody = await request.json();
 
   try {
-
-    const response = await axios.post("http://localhost:4000/auth/local/signin", { email, password }, {
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/local/signin`, { email, password }, {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json'

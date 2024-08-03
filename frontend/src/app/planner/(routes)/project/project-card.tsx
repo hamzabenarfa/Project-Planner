@@ -1,26 +1,18 @@
-import { FC } from 'react'; // Import FC type for functional components
+import { FC } from 'react'; 
 import { EllipsisVertical, Projector } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
+import {ProjectType} from '@/types/project.type'; 
+import { formatDistanceToNow } from 'date-fns';
 
-// Define prop types for ProjectCard component
-type ProjectCardProps = {
-  title: string;
-  status: string;
-  tasksCompleted: number;
-  totalTasks: number;
-  progress: number;
-  lastUpdated: string;
-};
-
-const ProjectCard: FC<ProjectCardProps> = ({
-  title,
+const ProjectCard: FC<ProjectType> = ({
+  name,
   status,
   tasksCompleted,
   totalTasks,
   progress,
-  lastUpdated,
+  updatedAt,
 }) => {
   let statusColorClass = '';
 
@@ -39,14 +31,14 @@ const ProjectCard: FC<ProjectCardProps> = ({
       statusColorClass = 'bg-green-100'; 
       break;
   }
-
+  const formattedDate = formatDistanceToNow(new Date(updatedAt), { addSuffix: true });
   return (
     <Card className="py-8 cursor-pointer">
       <CardContent className="flex justify-between">
         <div className="flex gap-2">
           <Projector className="aspect-square size-10" />
           <div>
-            <h1 className="text-lg font-bold">{title}</h1>
+            <h1 className="text-lg font-bold">{name}</h1>
             <p className={`text-sm text-gray-500 rounded-full w-fit px-2 ${statusColorClass}`}>
               {status}
             </p>
@@ -63,7 +55,7 @@ const ProjectCard: FC<ProjectCardProps> = ({
           <p>{`${progress}% completed`}</p>
         </div>
         <Progress value={progress} className="" />
-        <p>Last updated {lastUpdated}</p>
+        <p>Last updated {formattedDate}</p>
       </CardContent>
     </Card>
   );

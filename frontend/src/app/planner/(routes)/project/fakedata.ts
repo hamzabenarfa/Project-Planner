@@ -1,7 +1,7 @@
 export const fakeProjects = [
   {
     id: 1,
-    title: "Project 1",
+    name: "Project 1",
     status: "Started",
     tasksCompleted: 7,
     totalTasks: 11,
@@ -10,7 +10,7 @@ export const fakeProjects = [
   },
   {
     id: 2,
-    title: "Project 2",
+    name: "Project 2",
     status: "Pending",
     tasksCompleted: 3,
     totalTasks: 8,
@@ -19,7 +19,7 @@ export const fakeProjects = [
   },
   {
     id: 3,
-    title: "Project 3",
+    name: "Project 3",
     status: "In Progress",
     tasksCompleted: 11,
     totalTasks: 11,
@@ -28,7 +28,7 @@ export const fakeProjects = [
   },
   {
     id: 4,
-    title: "Project 4",
+    name: "Project 4",
     status: "Building",
     tasksCompleted: 11,
     totalTasks: 11,

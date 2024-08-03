@@ -1,78 +1,68 @@
 "use client";
+
+import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Layers, Pin } from "lucide-react";
 import ProjectCard from "./project-card";
 import { Button } from "@/components/ui/button";
-import { fakeProjects } from "./fakedata";
-import { useEffect, useState } from "react";
 import axiosInstance from "@/lib/axios-instance";
+import { ProjectType } from "@/types/project.type";
 
-type ProejctType = {
-  id: number;
-  name: string;
-  createdAt: Date;
-  updatedAt: Date;
-  ownerId: number;
-};
 const Project = () => {
-  const [data, setData] = useState({});
+  const [data, setData] = useState<ProjectType[]>([]);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axiosInstance<ProejctType[]>("/project/mine");
-        console.log("🚀 ~ fetchData ~ response:", response);
-
+        const response = await axiosInstance<ProjectType[]>({
+          url: "/project/mine",
+        });
         setData(response.data);
       } catch (err) {
-        console.log("🚀 ~ fetchData ~ err:", err);
+        console.error("Error fetching data:", err);
       }
     };
 
     fetchData();
   }, []);
 
-  console.log(data);
+  const renderProjects = (pinned:boolean) =>
+    data
+      .filter((project) => project.pinned === pinned)
+      .map((project) => (
+        <ProjectCard
+          key={project.id}
+          name={project.name}
+          status={project.status}
+          tasksCompleted={project.tasksCompleted}
+          totalTasks={project.totalTasks}
+          progress={project.progress}
+          updatedAt={project.updatedAt}
+        />
+      ));
 
   return (
-    <div className="  min-h-screen container ">
-      <section className=" space-y-4 p-4">
+    <div className="min-h-screen container">
+      <section className="space-y-4 p-4">
         <div className="flex gap-2">
           <Input type="search" placeholder="Search Project" />
           <Button>New Project</Button>
         </div>
 
-        <div className=" flex items-center justify-start">
-          <Pin /> Pinned Projects{" "}
+        <Button variant="ghost" className="flex items-center gap-2">
+          <Pin /> Pinned Projects
+        </Button>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {renderProjects(true)}
         </div>
 
-        <div className=" grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {fakeProjects.map((project) => (
-            <ProjectCard
-              key={project.id}
-              title={project.title}
-              status={project.status}
-              tasksCompleted={project.tasksCompleted}
-              totalTasks={project.totalTasks}
-              progress={project.progress}
-              lastUpdated={project.lastUpdated}
-            />
-          ))}
-        </div>
-        <div className=" flex items-center justify-start">
-          <Layers /> Other Projects{" "}
-        </div>
-        <div className=" grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {fakeProjects.map((project) => (
-            <ProjectCard
-              key={project.id}
-              title={project.title}
-              status={project.status}
-              tasksCompleted={project.tasksCompleted}
-              totalTasks={project.totalTasks}
-              progress={project.progress}
-              lastUpdated={project.lastUpdated}
-            />
-          ))}
+        <Button variant="ghost" className="flex items-center gap-2">
+          <Layers /> Other Projects
+        </Button>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {renderProjects(false)}
         </div>
       </section>
     </div>
