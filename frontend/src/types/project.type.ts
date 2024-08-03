@@ -1,12 +1,12 @@
 export type ProjectType = {
   id?: number;
   name: string;
-  pinned: boolean;
+  pinned?: boolean;
   progress: number;
   status: string
   totalTasks: number;
   tasksCompleted: number;
-  createdAt: Date;
+  createdAt?: Date;
   updatedAt: Date;
-  ownerId: number;
+  ownerId?: number;
 };
