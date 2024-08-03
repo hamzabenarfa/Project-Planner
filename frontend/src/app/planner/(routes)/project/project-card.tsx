@@ -1,3 +1,7 @@
+'use client'
+ 
+import { useRouter } from 'next/navigation'
+
 import { FC } from 'react'; 
 import { EllipsisVertical, Projector } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -7,6 +11,7 @@ import {ProjectType} from '@/types/project.type';
 import { formatDistanceToNow } from 'date-fns';
 
 const ProjectCard: FC<ProjectType> = ({
+  id,
   name,
   status,
   tasksCompleted,
@@ -31,8 +36,10 @@ const ProjectCard: FC<ProjectType> = ({
       break;
   }
   const formattedDate = formatDistanceToNow(new Date(updatedAt), { addSuffix: true });
+  const router = useRouter()
+
   return (
-    <Card className="py-8 cursor-pointer">
+    <Card className="py-8 cursor-pointer" onClick={() => router.push(`/planner/project/${id}`)}>
       <CardContent className="flex justify-between">
         <div className="flex gap-2">
           <Projector className="aspect-square size-10" />

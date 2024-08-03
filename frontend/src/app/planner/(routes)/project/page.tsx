@@ -31,6 +31,7 @@ const Project = () => {
       .filter((project) => project.pinned === pinned)
       .map((project) => (
         <ProjectCard
+          id={project.id}
           key={project.id}
           name={project.name}
           status={project.status}

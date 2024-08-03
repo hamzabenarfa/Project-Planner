@@ -1,6 +1,6 @@
 const PlusIcon = () => {
   return (
-    <div className="w-10 h-10 bg-gray-100 rounded-3xl flex justify-center items-center cursor-pointer">
+    <div className="w-12 h-12  flex justify-center items-center cursor-pointer">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         className="h-6 w-6 text-gray-500"

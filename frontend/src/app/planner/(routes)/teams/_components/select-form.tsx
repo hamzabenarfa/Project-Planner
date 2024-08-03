@@ -71,7 +71,7 @@ const SelectForm = () => {
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue>
-                    {members.find(member => member.id === field.value)?.email || "Select email"}
+                    {members.find(member => member.id == field.value)?.email || "Select email"}
 
                     </SelectValue>
                   </SelectTrigger>
