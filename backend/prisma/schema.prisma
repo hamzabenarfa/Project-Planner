@@ -43,16 +43,27 @@ model Team {
   @@map("teams")
 }
 
-model Project {
-  id   Int    @id @default(autoincrement())
-  name String
+enum Status {
+  BUILDING
+  STARTED
+  PENDING
+  INPROGRESS
+}
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+model Project {
+  id             Int      @id @default(autoincrement())
+  name           String
+  status         Status   @default(PENDING)
+  totalTasks     Int      @default(0)
+  tasksCompleted Int      @default(0)
+  progress       Int      @default(0)
+  pinned         Boolean  @default(false)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 
   projectMembers ProjectMember[]
   User           User?           @relation(fields: [ownerId], references: [id])
-  ownerId        Int?            
+  ownerId        Int?
 
   @@map("projects")
 }
@@ -64,9 +75,8 @@ model TeamMember {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  user      User     @relation(fields: [userId], references: [id])
-  team      Team     @relation(fields: [teamId], references: [id])
- 
+  user User @relation(fields: [userId], references: [id])
+  team Team @relation(fields: [teamId], references: [id])
 
   @@unique([userId, teamId])
   @@map("team_members")

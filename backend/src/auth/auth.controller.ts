@@ -29,9 +29,10 @@ export class AuthController {
   async signupLocal(
     @Body() dto: AuthDto,
     @Res({ passthrough: true }) res: Response,
-  ): Promise<void> {
+  ): Promise<{ message: string }> {
     const tokens = await this.authService.signupLocal(dto);
     setAuthCookies(res, tokens);
+    return { message: 'Signed up successfully' };
   }
 
   @Public()
@@ -40,9 +41,10 @@ export class AuthController {
   async signinLocal(
     @Body() dto: AuthDto,
     @Res({ passthrough: true }) res: Response,
-  ): Promise<void> {
+  ): Promise<{ message: string }> {
     const tokens = await this.authService.signinLocal(dto);
     setAuthCookies(res, tokens);
+    return { message: 'Signed in successfully' };
   }
 
   @UseGuards(AtGuard)
