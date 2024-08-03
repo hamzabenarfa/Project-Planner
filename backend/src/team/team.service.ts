@@ -8,7 +8,7 @@ export class TeamService {
   async create(dto: CreateTeamDto, userId: number) {
     const teamExists = await this.getMyTeam(userId);
     if (teamExists) {
-      throw new ConflictException('User Exists');
+      throw new ConflictException('You can have one team right now');
     }
     return await this.prisma.team.create({
       data: {

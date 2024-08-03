@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateTeamMemberDto } from './dto/create-team-member.dto';
 import { DatabaseService } from 'src/database/database.service';
 import { UserService } from 'src/user/user.service';
@@ -27,6 +27,15 @@ export class TeamMembersService {
 
   async addExistingMember(memberId: number, userId: number) {
     const MyTeamId = await this.teamService.getMyTeamId(userId);
+    const existingMember = await this.prisma.teamMember.findFirst({
+      where: {
+        teamId: MyTeamId,
+        userId: memberId,
+      },
+    });
+    if (existingMember) {
+      throw new HttpException('Member already exists', HttpStatus.CONFLICT);
+    }
     return this.prisma.teamMember.create({
       data: {
         teamId: MyTeamId,

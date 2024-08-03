@@ -65,6 +65,7 @@ model Project {
   User           User?           @relation(fields: [ownerId], references: [id])
   ownerId        Int?
 
+  @@unique([name, ownerId]) 
   @@map("projects")
 }
 
