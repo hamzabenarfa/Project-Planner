@@ -15,8 +15,7 @@ const ProjectCard: FC<ProjectType> = ({
   updatedAt,
 }) => {
   let statusColorClass = '';
-
-  // Determine color class based on status
+  
   switch (status.toLowerCase()) {
     case 'building':
       statusColorClass = 'bg-yellow-100'; 
