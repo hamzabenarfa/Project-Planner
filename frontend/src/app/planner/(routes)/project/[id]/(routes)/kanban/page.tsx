@@ -157,14 +157,25 @@ function KanbanBoard() {
     </div>
   );
 
-  function createTask(columnId: Id) {
-    const newTask: Task = {
-      id: generateId(),
-      columnId,
-      name: `Task ${tasks.length + 1}`,
-    };
-
-    setTasks([...tasks, newTask]);
+  async function createTask(columnId: Id) {
+    try {
+      const response = await axiosInstance({
+        url: "/tasks", 
+        method: "POST", 
+        data: {name: `Task ${tasks.length + 1}`,columnId}
+      });
+      const newTask: Task = {
+        id: response.data.id,
+        columnId,
+        name: response.data.name,
+      };
+  
+      setTasks([...tasks, newTask]);
+    } catch (error) {
+      console.error(error);
+      
+    }
+   
   }
 
   function deleteTask(id: Id) {
@@ -186,43 +197,52 @@ function KanbanBoard() {
       const response = await axiosInstance({
         url: "/column",
         method: "POST",
-        data: { projectId: parseInt(projectId.id), name: `Column ${columns.length + 1}` },
+        data: {
+          projectId: parseInt(projectId.id),
+          name: `Column ${columns.length + 1}`,
+        },
       });
       const columnToAdd: Column = {
         id: response.data.id,
         name: response.data.name,
       };
-  
+
       setColumns([...columns, columnToAdd]);
     } catch (error) {
       console.error(error);
     }
-
-   
   }
 
-  function deleteColumn(id: Id) {
-
-    try{
-      axiosInstance({"url": `/column/${id}`, "method": "DELETE"});
+  async function deleteColumn(id: Id) {
+    try {
+      await axiosInstance({ url: `/column/${id}`, method: "DELETE" });
       const filteredColumns = columns.filter((col) => col.id !== id);
       setColumns(filteredColumns);
-  
+
       const newTasks = tasks.filter((t) => t.columnId !== id);
       setTasks(newTasks);
-    }catch(err){
-      console.log(err)
+    } catch (err) {
+      console.log(err);
     }
-   
   }
 
-  function updateColumn(id: Id, title: string) {
-    const newColumns = columns.map((col) => {
-      if (col.id !== id) return col;
-      return { ...col, title };
-    });
+  async function updateColumn(id: Id, name: string) {
+    try {
+      await axiosInstance({
+        url: `/column/${id}`,
+        method: "PUT",
+        data: { name: name },
+      });
 
-    setColumns(newColumns);
+      const newColumns = columns.map((col) => {
+        if (col.id !== id) return col;
+        return { ...col, name };
+      });
+
+      setColumns(newColumns);
+    } catch (error) {
+      console.log("🚀 ~ updateColumn ~ error:", error);
+    }
   }
 
   function onDragStart(event: DragStartEvent) {
@@ -308,9 +328,6 @@ function KanbanBoard() {
   }
 }
 
-function generateId() {
-  /* Generate a random number between 0 and 10000 */
-  return Math.floor(Math.random() * 10001);
-}
+
 
 export default KanbanBoard;

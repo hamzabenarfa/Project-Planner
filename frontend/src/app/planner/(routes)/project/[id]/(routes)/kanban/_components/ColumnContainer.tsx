@@ -9,7 +9,7 @@ import { PlusCircle, Trash } from "lucide-react";
 interface Props {
   column: Column;
   deleteColumn: (id: Id) => void;
-  updateColumn: (id: Id, title: string) => void;
+  updateColumn: (id: Id, name: string) => void;
 
   createTask: (columnId: Id) => void;
   updateTask: (id: Id, content: string) => void;
@@ -127,7 +127,7 @@ function ColumnContainer({
           {!editMode && column.name}
           {editMode && (
             <input
-              className="bg-black focus:border-rose-500 border rounded outline-none px-2"
+              className=" focus:border-rose-500 text-black border rounded outline-none px-2"
               value={column.name}
               onChange={(e) => updateColumn(column.id, e.target.value)}
               autoFocus
