@@ -101,8 +101,7 @@ function ColumnContainer({
       h-[60px]
       cursor-grab
       rounded-md
-      rounded-b-none
-      p-3
+      p-4
       font-bold
       border-columnBackgroundColor
       border-4

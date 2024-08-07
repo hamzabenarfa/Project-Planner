@@ -10,7 +10,8 @@ export default function ProjectLayout({
 }>) {
   return (
     <section className="min-h-screen  flex">
-      <aside className="w-64 px-6 py-8 space-y-8 ">
+      
+      <aside className="hidden md:block w-64 min-w-64 px-6 py-8 space-y-8 ">
         <h2 className="font-bold mb-2">OVERVIEW</h2>
         <ul className="space-y-2 ">
           <Button variant="secondary" asChild className=" w-full">

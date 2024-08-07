@@ -1,7 +1,7 @@
 "use client";
 
 import { PlusCircle, Trash } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Column, Id, Task } from "@/types/kanban.type";
 import ColumnContainer from "./_components/ColumnContainer";
 import {
@@ -120,11 +120,17 @@ function KanbanBoard() {
     })
   );
 
+  const [portalContainer, setPortalContainer] = useState<HTMLElement | null>(null);
+  useEffect(() => {
+    // Set portalContainer to document.body on client side
+    setPortalContainer(document.body);
+  }, []);
+
   return (
     <div
       className="
         m-auto
-        flex
+        flex 
         min-h-screen
         w-full
         items-center
@@ -139,8 +145,8 @@ function KanbanBoard() {
         onDragEnd={onDragEnd}
         onDragOver={onDragOver}
       >
-        <div className="m-auto flex gap-4">
-          <div className="flex gap-4">
+        <div className="m-auto  flex-col md:flex-row items-start  flex gap-4">
+          <div className="flex gap-4  flex-col md:flex-row">
             <SortableContext items={columnsId}>
               {columns.map((col) => (
                 <ColumnContainer
@@ -181,7 +187,7 @@ function KanbanBoard() {
           </button>
         </div>
 
-        {createPortal(
+        {portalContainer && createPortal(
           <DragOverlay>
             {activeColumn && (
               <ColumnContainer
