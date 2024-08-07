@@ -27,6 +27,14 @@
     "lucide-react": "^0.399.0",
     "next": "14.2.4",
     "react": "^18",
+
+    "@dnd-kit/core": "^6.0.8",
+    "@dnd-kit/sortable": "^7.0.2",
+    
+    "focus-trap-react": "^10.2.1",
+    "framer-motion": "^10.15.0",
+    "uuid": "^9.0.0",
+
     "react-dom": "^18",
     "react-hook-form": "^7.52.1",
     "react-hot-toast": "^2.4.1",
@@ -38,6 +46,7 @@
     "@types/axios": "^0.9.36",
     "@types/node": "^20",
     "@types/react": "^18",
+    "@types/react-beautiful-dnd": "^13.1.8",
     "@types/react-dom": "^18",
     "eslint": "^8",
     "eslint-config-next": "14.2.4",

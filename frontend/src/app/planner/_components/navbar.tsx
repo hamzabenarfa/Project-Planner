@@ -10,7 +10,7 @@ const Navbar = () => {
     <nav className="fixed top-0 left-0 right-0 flex items-center justify-around p-4 border-b border-gray-300 backdrop-blur-sm bg-white bg-opacity-20 z-50 h-16">
       
       <div className="flex flex-row items-center gap-4">
-        <div>Icon</div>
+        <div className="text-xl">DevSync</div>
         <p>/</p>
         <div className=" flex items-center gap-1">
 

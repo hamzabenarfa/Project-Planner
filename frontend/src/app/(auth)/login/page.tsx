@@ -14,11 +14,20 @@ import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { useState } from "react";
 import Toast from "react-hot-toast";
+import { useRouter } from 'next/navigation'
 
+type LoginResponse ={
+  message:string;
+  role:string
+}
 const Login = () => {
+  const router = useRouter()
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+
+
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -33,13 +42,13 @@ const Login = () => {
         body: JSON.stringify({ email, password }),
       });
 
-      const data = await response.json();
+      const data:LoginResponse = await response.json();
+      console.log("🚀 ~ handleSubmit ~ data:", data)
+      Toast.success(data.message)
 
       if (response.ok) {
-        Toast.success(data.message)
-      } else {
-        Toast.error(data.message)
-      }
+        data.role === "MANAGER" ? router.push("/planner/project") : router.push("/")
+      } 
     } catch (error) {
       Toast.error(error)
     }
