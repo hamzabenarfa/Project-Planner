@@ -4,6 +4,7 @@ import { AuthDto } from './dto';
 import * as argon from 'argon2';
 import { Tokens } from './types';
 import { JwtService } from '@nestjs/jwt';
+import { Role } from '@prisma/client';
 
 @Injectable()
 export class AuthService {
@@ -24,10 +25,15 @@ export class AuthService {
     const newUser = await this.prisma.user.create({
       data: {
         email: dto.email,
+        role: dto.role,
         hash,
       },
     });
-    const tokens = await this.getTokens(newUser.id, newUser.email, user.role);
+    const tokens = await this.getTokens(
+      newUser.id,
+      newUser.email,
+      newUser.role,
+    );
     await this.updateRtHash(newUser.id, tokens.refresh_token);
     return tokens;
   }
@@ -93,11 +99,7 @@ export class AuthService {
     });
   }
 
-  async getTokens(
-    userId: number,
-    email: string,
-    role: string,
-  ): Promise<Tokens> {
+  async getTokens(userId: number, email: string, role: Role): Promise<Tokens> {
     const [at, rt] = await Promise.all([
       this.jwtService.signAsync(
         { sub: userId, email, role },

@@ -1,22 +1,22 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   HttpStatus,
+  Param,
+  ParseIntPipe,
   Post,
-  UseGuards,
 } from '@nestjs/common';
 import { ProjectService } from './project.service';
 import { GetCurrentUserId } from 'src/common/decorators';
 import { CreateProjectDto } from './dto';
-import { AtGuard } from 'src/common/guards';
 
 @Controller('project')
 export class ProjectController {
   constructor(private readonly projectService: ProjectService) {}
 
-  @UseGuards(AtGuard)
   @Post('')
   @HttpCode(HttpStatus.CREATED)
   createProject(
@@ -26,9 +26,16 @@ export class ProjectController {
     return this.projectService.createProject(dto, userId);
   }
 
-  @UseGuards(AtGuard)
   @Get('/mine')
   getMyProjects(@GetCurrentUserId() userId: number) {
     return this.projectService.getMyProjects(userId);
+  }
+
+  @Delete('/:projectId')
+  deleteProject(
+    @GetCurrentUserId() userId: number,
+    @Param('projectId', ParseIntPipe) projectId: number,
+  ) {
+    return this.projectService.deleteProject(projectId, userId);
   }
 }

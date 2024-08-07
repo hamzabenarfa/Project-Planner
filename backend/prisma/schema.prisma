@@ -62,8 +62,10 @@ model Project {
   updatedAt      DateTime @updatedAt
 
   projectMembers ProjectMember[]
-  User           User?           @relation(fields: [ownerId], references: [id])
+  User           User?           @relation(fields: [ownerId], references: [id] , onDelete: Cascade)
   ownerId        Int?
+
+  kanban Kanban?
 
   @@unique([name, ownerId]) 
   @@map("projects")
@@ -106,4 +108,45 @@ model Resource {
   updatedAt DateTime @updatedAt
 
   @@map("resources")
+}
+
+model Kanban {
+  id        Int      @id @default(autoincrement())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  project Project @relation(fields: [projectId], references: [id])
+  projectId Int @unique
+  
+  columns Column[]
+  //tasks   Task[]
+
+  @@map("kanbans")
+}
+
+model Column {
+  id        Int      @id @default(autoincrement())
+  name      String
+  kanbanId  Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  kanban Kanban @relation(fields: [kanbanId], references: [id])
+  tasks  Task[]
+
+  @@map("columns")
+  @@unique([name,kanbanId])
+}
+
+model Task {
+  id        Int      @id @default(autoincrement())
+  name      String
+  columnId  Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  column Column @relation(fields: [columnId], references: [id])
+
+  @@map("tasks")
 }

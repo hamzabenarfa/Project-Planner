@@ -8,6 +8,9 @@ import { UserModule } from './user/user.module';
 import { TeamModule } from './team/team.module';
 import { TeamMembersModule } from './team-members/team-members.module';
 import { ProjectMemebersModule } from './project_memebers/project_memebers.module';
+import { KanbanModule } from './kanban/kanban.module';
+import { ColumnModule } from './column/column.module';
+import { TasksModule } from './tasks/tasks.module';
 
 @Module({
   imports: [
@@ -18,6 +21,9 @@ import { ProjectMemebersModule } from './project_memebers/project_memebers.modul
     TeamModule,
     TeamMembersModule,
     ProjectMemebersModule,
+    KanbanModule,
+    ColumnModule,
+    TasksModule,
   ],
   controllers: [],
   providers: [

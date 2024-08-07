@@ -23,14 +23,83 @@ export class ProjectService {
         ownerId: userId,
       },
     });
+
+    await this.databaseService.kanban.create({
+      data: {
+        projectId: newProject.id,
+      },
+    });
     return newProject;
   }
 
-  getMyProjects(userId: number) {
-    return this.databaseService.project.findMany({
+  async getMyProjects(userId: number) {
+    return await this.databaseService.project.findMany({
       where: {
         ownerId: userId,
       },
     });
+  }
+
+  async deleteProject(projectId: number, userId: number) {
+    const project = await this.databaseService.project.findFirst({
+      where: {
+        id: projectId,
+        ownerId: userId,
+      },
+    });
+    if (!project) {
+      throw new HttpException('Project not found', HttpStatus.NOT_FOUND);
+    }
+    await this.deleteRelatedRecords(projectId);
+
+    await this.databaseService.project.delete({
+      where: {
+        id: projectId,
+      },
+    });
+
+    return { message: 'Project deleted successfully' };
+  }
+  private async deleteRelatedRecords(projectId: number) {
+    await this.databaseService.projectMember.deleteMany({
+      where: {
+        projectId: projectId,
+      },
+    });
+
+    const kanban = await this.databaseService.kanban.findFirst({
+      where: {
+        projectId: projectId,
+      },
+      include: {
+        columns: {
+          include: {
+            tasks: true,
+          },
+        },
+      },
+    });
+
+    if (kanban) {
+      for (const column of kanban.columns) {
+        await this.databaseService.task.deleteMany({
+          where: {
+            columnId: column.id,
+          },
+        });
+
+        await this.databaseService.column.delete({
+          where: {
+            id: column.id,
+          },
+        });
+      }
+
+      await this.databaseService.kanban.delete({
+        where: {
+          id: kanban.id,
+        },
+      });
+    }
   }
 }
