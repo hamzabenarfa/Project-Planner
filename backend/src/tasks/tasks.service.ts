@@ -15,4 +15,20 @@ export class TasksService {
     });
     return taskCreated;
   }
+  async moveTaskToColumn(taskId: number, columnId: number) {
+    const task = await this.databaseService.task.findUnique({
+      where: {
+        id: taskId,
+      },
+    });
+    if (!task) {
+      throw new Error('Task not found');
+    }
+    return this.databaseService.task.update({
+      where: { id: task.id },
+      data: {
+        columnId: columnId,
+      },
+    });
+  }
 }

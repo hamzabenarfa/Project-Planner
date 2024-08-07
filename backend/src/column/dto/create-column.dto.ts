@@ -6,5 +6,5 @@ export class CreateColumnDto {
   name: string;
 
   @IsNumber()
-  kanbanId: number;
+  projectId: number;
 }

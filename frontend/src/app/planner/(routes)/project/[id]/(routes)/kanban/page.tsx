@@ -23,26 +23,28 @@ function KanbanBoard() {
   const projectId = useParams();
   const [columns, setColumns] = useState<Column[]>([]);
   const [tasks, setTasks] = useState<Task[]>([]);
-
   const columnsId = useMemo(() => columns.map((col) => col.id), [columns]);
 
   useEffect(() => {
-    getColumns();
+    async function getColumns() {
+      try {
+        const response = await axiosInstance({
+          url: `/column/all/${projectId.id}`,
+          method: "GET",
+        });
+        setColumns(response.data);
+        const allTasks = response.data.flatMap((column) => column.tasks);
+        setTasks(allTasks);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    if (projectId.id) {
+      getColumns();
+    }
   }, [projectId.id]);
 
-  async function getColumns() {
-    try {
-      const response = await axiosInstance({
-        url: `/column/all/${projectId.id}`,
-        method: "GET",
-      });
-      setColumns(response.data);
-      const allTasks = response.data.flatMap((column) => column.tasks);
-      setTasks(allTasks);
-    } catch (error) {
-      console.error(error);
-    }
-  }
+  
 
   const [activeColumn, setActiveColumn] = useState<Column | null>(null);
   const [activeTask, setActiveTask] = useState<Task | null>(null);
@@ -160,22 +162,20 @@ function KanbanBoard() {
   async function createTask(columnId: Id) {
     try {
       const response = await axiosInstance({
-        url: "/tasks", 
-        method: "POST", 
-        data: {name: `Task ${tasks.length + 1}`,columnId}
+        url: "/tasks",
+        method: "POST",
+        data: { name: `Task ${tasks.length + 1}`, columnId },
       });
       const newTask: Task = {
         id: response.data.id,
         columnId,
         name: response.data.name,
       };
-  
+
       setTasks([...tasks, newTask]);
     } catch (error) {
       console.error(error);
-      
     }
-   
   }
 
   function deleteTask(id: Id) {
@@ -283,7 +283,7 @@ function KanbanBoard() {
     });
   }
 
-  function onDragOver(event: DragOverEvent) {
+  async function onDragOver(event: DragOverEvent) {
     const { active, over } = event;
     if (!over) return;
 
@@ -315,19 +315,28 @@ function KanbanBoard() {
 
     const isOverAColumn = over.data.current?.type === "Column";
 
-    // Im dropping a Task over a column
     if (isActiveATask && isOverAColumn) {
       setTasks((tasks) => {
         const activeIndex = tasks.findIndex((t) => t.id === activeId);
-
         tasks[activeIndex].columnId = overId;
-        console.log("DROPPING TASK OVER COLUMN", { activeIndex });
+        moveTaskToColumn(activeId, overId);
         return arrayMove(tasks, activeIndex, activeIndex);
       });
     }
   }
+
+  async function moveTaskToColumn(taskId, columnId) {
+    try {
+      const response = await axiosInstance({
+        url: `/tasks/${taskId}/${columnId}`,
+        method: "PUT",
+      });
+
+      console.log(response.data);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  }
 }
-
-
 
 export default KanbanBoard;

@@ -1,7 +1,6 @@
-"use client"
+"use client";
 import { useState } from "react";
-import {  Trash } from "lucide-react";
-import {  Id, Task } from "@/types/kanban.type";
+import { Id, Task } from "@/types/kanban.type";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
@@ -12,8 +11,6 @@ interface Props {
 }
 
 function TaskCard({ task, deleteTask, updateTask }: Props) {
-  const [mouseIsOver, setMouseIsOver] = useState(false);
-  const [editMode, setEditMode] = useState(true);
 
   const {
     setNodeRef,
@@ -28,7 +25,6 @@ function TaskCard({ task, deleteTask, updateTask }: Props) {
       type: "Task",
       task,
     },
-    disabled: editMode,
   });
 
   const style = {
@@ -36,10 +32,6 @@ function TaskCard({ task, deleteTask, updateTask }: Props) {
     transform: CSS.Transform.toString(transform),
   };
 
-  const toggleEditMode = () => {
-    setEditMode((prev) => !prev);
-    setMouseIsOver(false);
-  };
 
   if (isDragging) {
     return (
@@ -48,38 +40,10 @@ function TaskCard({ task, deleteTask, updateTask }: Props) {
         style={style}
         className="
         opacity-30
-      bg-mainBackgroundColor p-2.5 h-[100px] min-h-[100px] items-center flex text-left rounded-xl border-2 border-rose-500  cursor-grab relative
+      bg-mainBackgroundColor p-2.5 h-[100px] min-h-[100px] items-center 
+        flex text-left rounded-xl border-2 border-rose-500  cursor-grab relative
       "
       />
-    );
-  }
-
-  if (editMode) {
-    return (
-      <div
-        ref={setNodeRef}
-        style={style}
-        {...attributes}
-        {...listeners}
-        className="bg-mainBackgroundColor text-black p-2.5 h-[100px] min-h-[100px] items-center flex text-left rounded-xl hover:ring-2 hover:ring-inset hover:ring-rose-500 cursor-grab relative"
-      >
-        <textarea
-          className="
-        h-[90%]
-        w-full resize-none border-none rounded bg-transparent text-black focus:outline-none
-        "
-          value={task.name}
-          autoFocus
-          placeholder="Task content here"
-          onBlur={toggleEditMode}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" && e.shiftKey) {
-              toggleEditMode();
-            }
-          }}
-          onChange={(e) => updateTask(task.id, e.target.value)}
-        />
-      </div>
     );
   }
 
@@ -89,29 +53,11 @@ function TaskCard({ task, deleteTask, updateTask }: Props) {
       style={style}
       {...attributes}
       {...listeners}
-      onClick={toggleEditMode}
-      className="bg-mainBackgroundColor shadow-sm p-2.5 h-[100px] min-h-[100px] items-center flex text-left rounded-xl hover:ring-2 hover:ring-inset hover:ring-rose-500 cursor-grab relative task"
-      onMouseEnter={() => {
-        setMouseIsOver(true);
-      }}
-      onMouseLeave={() => {
-        setMouseIsOver(false);
-      }}
+      className="bg-mainBackgroundColor shadow-sm p-2.5 h-[100px] min-h-[100px] items-start 
+                   flex text-left rounded-xl hover:ring-2 hover:ring-inset hover:ring-rose-500 
+                   cursor-grab relative task"
     >
-      <p className="my-auto h-[90%] w-full overflow-y-auto overflow-x-hidden whitespace-pre-wrap text-black">
-        {task.name}
-      </p>
-
-      {mouseIsOver && (
-        <button
-          onClick={() => {
-            deleteTask(task.id);
-          }}
-          className="stroke-white text-black absolute right-4 top-1/2 -translate-y-1/2 bg-columnBackgroundColor p-2 rounded opacity-60 hover:opacity-100"
-        >
-          <Trash />
-        </button>
-      )}
+      <p className="select-none	 w-full whitespace-pre-wrap text-black ">{task.name}</p>
     </div>
   );
 }

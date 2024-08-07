@@ -1,4 +1,11 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Put,
+  ParseIntPipe,
+  Param,
+} from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 
@@ -9,5 +16,12 @@ export class TasksController {
   @Post()
   create(@Body() createTaskDto: CreateTaskDto) {
     return this.tasksService.create(createTaskDto);
+  }
+  @Put('/:taskId/:columnId')
+  moveTaskToColumn(
+    @Param('taskId', ParseIntPipe) taskId: number,
+    @Param('columnId', ParseIntPipe) columnId: number,
+  ) {
+    return this.tasksService.moveTaskToColumn(taskId, columnId);
   }
 }
