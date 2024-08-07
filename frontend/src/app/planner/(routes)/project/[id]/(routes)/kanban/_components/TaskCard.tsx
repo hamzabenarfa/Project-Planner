@@ -68,7 +68,7 @@ function TaskCard({ task, deleteTask, updateTask }: Props) {
         h-[90%]
         w-full resize-none border-none rounded bg-transparent text-black focus:outline-none
         "
-          value={task.content}
+          value={task.name}
           autoFocus
           placeholder="Task content here"
           onBlur={toggleEditMode}
@@ -99,7 +99,7 @@ function TaskCard({ task, deleteTask, updateTask }: Props) {
       }}
     >
       <p className="my-auto h-[90%] w-full overflow-y-auto overflow-x-hidden whitespace-pre-wrap text-black">
-        {task.content}
+        {task.name}
       </p>
 
       {mouseIsOver && (
