@@ -1,10 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { DatabaseService } from 'src/database/database.service';
+import { KanbanService } from 'src/kanban/kanban.service';
 
 @Injectable()
 export class TasksService {
-  constructor(private readonly databaseService: DatabaseService) {}
+  constructor(
+    private readonly databaseService: DatabaseService,
+    private readonly kanbanService: KanbanService,
+  ) {}
 
   async create(createTaskDto: CreateTaskDto) {
     const taskCreated = await this.databaseService.task.create({
@@ -22,7 +26,7 @@ export class TasksService {
     });
 
     const kanbanId = taskCreated.column.kanbanId;
-    await this.updateKanbanTotalTasks(kanbanId, 'increment');
+    this.kanbanService.updateKanbanTotalTasks(kanbanId, 'increment');
 
     return taskCreated;
   }
@@ -47,7 +51,7 @@ export class TasksService {
         where: { id: taskId },
       });
 
-      await this.updateKanbanTotalTasks(kanbanId, 'decrement');
+      await this.kanbanService.updateKanbanTotalTasks(kanbanId, 'decrement');
 
       return { message: 'Task deleted successfully' };
     } catch (error) {
@@ -70,28 +74,5 @@ export class TasksService {
         columnId: columnId,
       },
     });
-  }
-  private async updateKanbanTotalTasks(
-    kanbanId: number,
-    change: 'increment' | 'decrement',
-  ) {
-    try {
-      await this.databaseService.kanban.update({
-        where: {
-          id: kanbanId,
-        },
-        data: {
-          totalTasks: {
-            [change]: 1, // Uses the `change` parameter to either increment or decrement
-          },
-        },
-      });
-    } catch (error) {
-      console.error(
-        `Error updating totalTasks for Kanban ID ${kanbanId}:`,
-        error,
-      );
-      throw new Error('Failed to update totalTasks');
-    }
   }
 }
