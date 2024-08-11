@@ -1,4 +1,4 @@
-export default function Page({ params }: { params: { id: number } }) {
+export default function Page() {
 
   return (
     <div className="container p-4">
