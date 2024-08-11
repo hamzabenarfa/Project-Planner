@@ -27,6 +27,11 @@ export class ProjectController {
     return this.projectService.createProject(dto, userId);
   }
 
+  @Get('/progress')
+  getProjectsWithProgress(@GetCurrentUserId() userId: number) {
+    return this.projectService.getProjectsWithProgress(userId);
+  }
+
   @Get('/mine/all')
   getMyProjects(@GetCurrentUserId() userId: number) {
     return this.projectService.getMyProjects(userId);

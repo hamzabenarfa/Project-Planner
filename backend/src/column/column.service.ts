@@ -71,6 +71,7 @@ export class ColumnService {
       },
       data: {
         name: dto.name,
+        done: dto.name.toLowerCase() === 'done' ? true : false,
       },
     });
     return column;

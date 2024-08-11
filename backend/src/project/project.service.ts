@@ -1,18 +1,14 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { DatabaseService } from 'src/database/database.service';
 import { CreateProjectDto } from './dto';
+import { ProjectKpiService } from './kpi/project-kpi.service';
 
 @Injectable()
 export class ProjectService {
-  constructor(private readonly databaseService: DatabaseService) {}
-
-  private calculateProgress(dto: CreateProjectDto): number {
-    if (dto.totalTasks === 0) {
-      return 0;
-    } else {
-      return Math.floor((dto.tasksCompleted / dto.totalTasks) * 100);
-    }
-  }
+  constructor(
+    private readonly databaseService: DatabaseService,
+    private readonly projectKpiService: ProjectKpiService,
+  ) {}
 
   async createProject(dto: CreateProjectDto, userId: number) {
     const projectExist = await this.databaseService.project.findFirst({
@@ -46,6 +42,25 @@ export class ProjectService {
       },
     });
   }
+  async getProjectsWithProgress(userId: number) {
+    const projects = await this.getMyProjects(userId);
+
+    const projectsWithProgress = await Promise.all(
+      projects.map(async (project) => {
+        const progress = await this.projectKpiService.getMyProjectProgress(
+          userId,
+          project.id,
+        );
+        return {
+          ...project,
+          ...progress, // Include progress in the project data
+        };
+      }),
+    );
+
+    return projectsWithProgress;
+  }
+
   async getMyPinnedProjects(userId: number) {
     return await this.databaseService.project.findMany({
       where: {
