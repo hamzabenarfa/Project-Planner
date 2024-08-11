@@ -32,7 +32,6 @@ const statusColors: Record<string, string> = {
 } as const;
 
 interface ProjectCardProps extends ProjectType {
-
   onDelete: (id: Id) => void;
   onPin: (id: Id) => void;
 }
@@ -41,9 +40,10 @@ const ProjectCard = ({
   id,
   name,
   status,
-  tasksCompleted,
+  completedTasks,
   totalTasks,
   progress,
+  pinned,
   updatedAt,
   onDelete,
   onPin,
@@ -91,7 +91,7 @@ const ProjectCard = ({
                   }}
                   className="flex items-center gap-1 cursor-pointer text-orange-400"
                 >
-                  <Pin size={18} /> Unpin
+                  <Pin size={18} /> {pinned ? "unpin" : "pin"}
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuLabel>
@@ -117,7 +117,7 @@ const ProjectCard = ({
 
       <CardContent className="space-y-1">
         <div className="flex justify-between text-sm">
-          <h1>{`${tasksCompleted}/${totalTasks} tasks completed`}</h1>
+          <h1>{`${completedTasks}/${totalTasks} tasks completed`}</h1>
           <p>{`${progress}% completed`}</p>
         </div>
         <Progress value={progress} />

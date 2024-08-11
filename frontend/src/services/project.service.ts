@@ -6,16 +6,14 @@ import { ProjectType } from "@/types/project.type";
 class ProjectService {
   async getProjects(): Promise<Response<ProjectType[]>> {
     try {
-      const response = await api.get<ProjectType[]>("/project/mine/all");
+      const response = await api.get<ProjectType[]>("/project/progress");
+      console.log("🚀 ~ ProjectService ~ getProjects ~ response:", response.data)
       return {
         success: true,
         data: response.data,
       };
-    } catch (error:any) {
-      return {
-        success: false,
-        data: error.data,
-      };
+    } catch (error: any) {
+      throw error.response.data.message;
     }
   }
 
@@ -26,11 +24,8 @@ class ProjectService {
         success: true,
         data: response.data,
       };
-    } catch (error:any) {
-      return {
-        success: false,
-        data: error.data,
-      };
+    } catch (error: any) {
+      throw error.response.data.message;
     }
   }
   async getUnpinnedProjects(): Promise<Response<ProjectType[]>> {
@@ -40,11 +35,8 @@ class ProjectService {
         success: true,
         data: response.data,
       };
-    } catch (error:any) {
-      return {
-        success: false,
-        data: error.data,
-      };
+    } catch (error: any) {
+      throw error.response.data.message;
     }
   }
   async deleteProject(id: Id): Promise<Response<String>> {
@@ -54,11 +46,8 @@ class ProjectService {
         success: true,
         data: response.data,
       };
-    } catch (error:any) {
-      return {
-        success: false,
-        data: error.data,
-      };
+    } catch (error: any) {
+      throw error.response.data.message;
     }
   }
   async togglePinProject(projectId: Id): Promise<Response<ProjectType>> {
@@ -68,11 +57,21 @@ class ProjectService {
         success: true,
         data: response.data,
       };
-    } catch (error:any) {
+    } catch (error: any) {
+      throw error.response.data.message;
+    }
+  }
+  async createProject(projectName: string): Promise<Response<ProjectType>> {
+    try {
+      const response = await api.post<ProjectType>("/project", {
+        name: projectName,
+      });
       return {
-        success: false,
-        data: error.data,
+        success: true,
+        data: response.data,
       };
+    } catch (error: any) {
+      throw error.response.data.message;
     }
   }
 }

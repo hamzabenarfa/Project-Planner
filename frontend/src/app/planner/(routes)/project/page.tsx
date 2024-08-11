@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import { Id } from "@/types/kanban.type";
 import { ProjectType } from "@/types/project.type";
 import Toast from "react-hot-toast";
+import { CreateNewProjectModal } from "./new-project-modal";
 const Project = () => {
   const { projectData, isLoading, error } = useGetAllMyProject();
   const [projects, setProjects] = useState<ProjectType[]>([]);
@@ -62,9 +63,10 @@ const Project = () => {
           <ProjectCard
             id={project.id}
             key={project.id}
+            pinned={project.pinned}
             name={project.name}
             status={project.status}
-            tasksCompleted={project.tasksCompleted}
+            completedTasks={project.completedTasks}
             totalTasks={project.totalTasks}
             progress={project.progress}
             updatedAt={project.updatedAt}
@@ -81,7 +83,8 @@ const Project = () => {
       <section className="space-y-4 p-4">
         <div className="flex gap-2">
           <Input type="search" placeholder="Search Project" />
-          <Button>New Project</Button>
+          <CreateNewProjectModal />
+         
         </div>
 
         <Button variant="ghost" className="flex items-center gap-2">

@@ -1,8 +1,8 @@
 "use client";
-import { useState } from "react";
 import { Id, Task } from "@/types/kanban.type";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import TaskCardDrawer from "./TaskCardDrawer";
 
 interface Props {
   task: Task;
@@ -32,7 +32,6 @@ function TaskCard({ task, deleteTask, updateTask }: Props) {
     transform: CSS.Transform.toString(transform),
   };
 
-
   if (isDragging) {
     return (
       <div
@@ -47,6 +46,8 @@ function TaskCard({ task, deleteTask, updateTask }: Props) {
     );
   }
 
+  
+
   return (
     <div
       ref={setNodeRef}
@@ -57,7 +58,10 @@ function TaskCard({ task, deleteTask, updateTask }: Props) {
                    flex text-left rounded-xl hover:ring-2 hover:ring-inset hover:ring-rose-500 
                    cursor-grab relative task"
     >
-      <p className="select-none	 w-full whitespace-pre-wrap text-black ">{task.name}</p>
+      <p className="select-none	 w-full whitespace-pre-wrap text-black ">
+        {task.name}
+      </p>
+      <TaskCardDrawer /> 
     </div>
   );
 }

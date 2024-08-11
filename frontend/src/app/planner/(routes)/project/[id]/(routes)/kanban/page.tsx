@@ -17,7 +17,7 @@ import {
 import { SortableContext, arrayMove } from "@dnd-kit/sortable";
 import { createPortal } from "react-dom";
 import TaskCard from "./_components/TaskCard";
-import axiosInstance from "@/lib/axios-instance";
+import api from "@/lib/axios-instance";
 import { useParams } from "next/navigation";
 function KanbanBoard() {
   const projectId = useParams();
@@ -28,7 +28,7 @@ function KanbanBoard() {
   useEffect(() => {
     async function getColumns() {
       try {
-        const response = await axiosInstance({
+        const response = await api({
           url: `/column/all/${projectId.id}`,
           method: "GET",
         });
@@ -161,7 +161,7 @@ function KanbanBoard() {
 
   async function createTask(columnId: Id) {
     try {
-      const response = await axiosInstance({
+      const response = await api({
         url: "/tasks",
         method: "POST",
         data: { name: `Task ${tasks.length + 1}`, columnId },
@@ -184,17 +184,20 @@ function KanbanBoard() {
   }
 
   function updateTask(id: Id, content: string) {
-    const newTasks = tasks.map((task) => {
-      if (task.id !== id) return task;
-      return { ...task, content };
-    });
+ 
+    
+    
+    // const newTasks = tasks.map((task) => {
+    //   if (task.id !== id) return task;
+    //   return { ...task, content };
+    // });
 
-    setTasks(newTasks);
+    // setTasks(newTasks);
   }
 
   async function createNewColumn() {
     try {
-      const response = await axiosInstance({
+      const response = await api({
         url: "/column",
         method: "POST",
         data: {
@@ -215,7 +218,7 @@ function KanbanBoard() {
 
   async function deleteColumn(id: Id) {
     try {
-      await axiosInstance({ url: `/column/${id}`, method: "DELETE" });
+      await api({ url: `/column/${id}`, method: "DELETE" });
       const filteredColumns = columns.filter((col) => col.id !== id);
       setColumns(filteredColumns);
 
@@ -228,7 +231,7 @@ function KanbanBoard() {
 
   async function updateColumn(id: Id, name: string) {
     try {
-      await axiosInstance({
+      await api({
         url: `/column/${id}`,
         method: "PUT",
         data: { name: name },
@@ -327,7 +330,7 @@ function KanbanBoard() {
 
   async function moveTaskToColumn(taskId, columnId) {
     try {
-      const response = await axiosInstance({
+      const response = await api({
         url: `/tasks/${taskId}/${columnId}`,
         method: "PUT",
       });

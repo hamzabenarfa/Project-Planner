@@ -1,11 +1,14 @@
+"use client";
+
+import { useParams } from "next/navigation";
 import Link from "next/link";
 import { routes } from "./routes";
 
-const Sidebar = (params: { id: string }) => {
+const Sidebar = () => {
+  const params = useParams();
+
   return (
-    <div
-      className={`fixed inset-0 z-30  text-black transform  transition-transform duration-200 ease-in-out md:relative md:translate-x-0 md:w-64`}
-    >
+    <div className=" text-black w-64 border-r flex  flex-col border-gray-200">
       <div className="py-5 px-6 font-bold text-lg ">Manager dashboard</div>
       <ul className="flex-1 p-6 space-y-4">
         {routes.map(({ path, label, icon: Icon }) => (
@@ -14,9 +17,7 @@ const Sidebar = (params: { id: string }) => {
             className="p-2 font-semibold text-sm flex items-center gap-2"
           >
             <Icon className="w-6 h-6" />
-            <Link href={path.replace("[id]", params.id || "default")}>
-              {label}
-            </Link>
+            <Link href={path.replace("[id]", String(params.id))}>{label}</Link>
           </li>
         ))}
       </ul>

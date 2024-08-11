@@ -5,7 +5,7 @@ export type ProjectType = {
   progress: number;
   status: string
   totalTasks: number;
-  tasksCompleted: number;
+  completedTasks: number;
   createdAt?: Date;
   updatedAt: Date;
   ownerId?: number;
