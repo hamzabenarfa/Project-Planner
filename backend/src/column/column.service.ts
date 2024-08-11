@@ -13,6 +13,7 @@ export class ColumnService {
       data: {
         name: createColumnDto.name,
         kanbanId: kanban.id,
+        done: createColumnDto.name.toLowerCase() === 'done' ? true : false,
       },
     });
     return columnCreated;
