@@ -39,7 +39,22 @@ export class ProjectService {
       },
     });
   }
-
+  async getMyPinnedProjects(userId: number) {
+    return await this.databaseService.project.findMany({
+      where: {
+        ownerId: userId,
+        pinned: true,
+      },
+    });
+  }
+  async getMyUnpinnedProjects(userId: number) {
+    return await this.databaseService.project.findMany({
+      where: {
+        ownerId: userId,
+        pinned: false,
+      },
+    });
+  }
   async deleteProject(projectId: number, userId: number) {
     const project = await this.databaseService.project.findFirst({
       where: {
@@ -60,6 +75,26 @@ export class ProjectService {
 
     return { message: 'Project deleted successfully' };
   }
+  async togglePinProject(projectId: number, userId: number) {
+    const project = await this.databaseService.project.findFirst({
+      where: {
+        id: projectId,
+        ownerId: userId,
+      },
+    });
+    if (!project) {
+      throw new HttpException('Project not found', HttpStatus.NOT_FOUND);
+    }
+    return await this.databaseService.project.update({
+      where: {
+        id: projectId,
+      },
+      data: {
+        pinned: !project.pinned,
+      },
+    });
+  }
+
   private async deleteRelatedRecords(projectId: number) {
     await this.databaseService.projectMember.deleteMany({
       where: {

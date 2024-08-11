@@ -128,7 +128,10 @@ model Kanban {
 model Column {
   id        Int      @id @default(autoincrement())
   name      String
+  completed Boolean @default(false)
   kanbanId  Int
+
+  
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

@@ -37,7 +37,7 @@ export class ColumnController {
   }
 
   @Delete(':columnId')
-  delete(@Param('columnId', ParseIntPipe) columnId: number) {
+  deleteColumn(@Param('columnId', ParseIntPipe) columnId: number) {
     return this.columnService.delete(columnId);
   }
 }

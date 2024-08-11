@@ -8,6 +8,7 @@ import {
   Param,
   ParseIntPipe,
   Post,
+  Put,
 } from '@nestjs/common';
 import { ProjectService } from './project.service';
 import { GetCurrentUserId } from 'src/common/decorators';
@@ -26,9 +27,25 @@ export class ProjectController {
     return this.projectService.createProject(dto, userId);
   }
 
-  @Get('/mine')
+  @Get('/mine/all')
   getMyProjects(@GetCurrentUserId() userId: number) {
     return this.projectService.getMyProjects(userId);
+  }
+  @Get('/mine/pinned')
+  getMyPinnedProjects(@GetCurrentUserId() userId: number) {
+    return this.projectService.getMyPinnedProjects(userId);
+  }
+  @Get('/mine/unpinned')
+  getMyUnpinnedProjects(@GetCurrentUserId() userId: number) {
+    return this.projectService.getMyUnpinnedProjects(userId);
+  }
+
+  @Put('/pin/:projectId')
+  togglePinProject(
+    @GetCurrentUserId() userId: number,
+    @Param('projectId', ParseIntPipe) projectId: number,
+  ) {
+    return this.projectService.togglePinProject(projectId, userId);
   }
 
   @Delete('/:projectId')
