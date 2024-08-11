@@ -69,7 +69,7 @@ export class ColumnService {
         id: columnId,
       },
       data: {
-        name: dto.name, 
+        name: dto.name,
       },
     });
     return column;

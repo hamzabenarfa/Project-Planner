@@ -51,23 +51,21 @@ enum Status {
 }
 
 model Project {
-  id             Int      @id @default(autoincrement())
-  name           String
-  status         Status   @default(PENDING)
-  totalTasks     Int      @default(0)
-  tasksCompleted Int      @default(0)
-  progress       Int      @default(0)
-  pinned         Boolean  @default(false)
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  id     Int    @id @default(autoincrement())
+  name   String
+  status Status @default(PENDING)
+
+  pinned    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   projectMembers ProjectMember[]
-  User           User?           @relation(fields: [ownerId], references: [id] , onDelete: Cascade)
+  User           User?           @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   ownerId        Int?
 
   kanban Kanban?
 
-  @@unique([name, ownerId]) 
+  @@unique([name, ownerId])
   @@map("projects")
 }
 
@@ -111,14 +109,18 @@ model Resource {
 }
 
 model Kanban {
-  id        Int      @id @default(autoincrement())
+  id Int @id @default(autoincrement())
+
+  totalTasks          Int @default(0)
+  totalTasksCompleted Int @default(0)
+  progress            Int @default(0)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  project Project @relation(fields: [projectId], references: [id])
-  projectId Int @unique
-  
+  project   Project @relation(fields: [projectId], references: [id])
+  projectId Int     @unique
+
   columns Column[]
   //tasks   Task[]
 
@@ -126,20 +128,19 @@ model Kanban {
 }
 
 model Column {
-  id        Int      @id @default(autoincrement())
+  id        Int     @id @default(autoincrement())
   name      String
-  completed Boolean @default(false)
+  done Boolean @default(false)
   kanbanId  Int
 
-  
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   kanban Kanban @relation(fields: [kanbanId], references: [id])
   tasks  Task[]
 
+  @@unique([name, kanbanId])
   @@map("columns")
-  @@unique([name,kanbanId])
 }
 
 model Task {
@@ -148,6 +149,7 @@ model Task {
   columnId  Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  completed Boolean @default(false)
 
   column Column @relation(fields: [columnId], references: [id])
 

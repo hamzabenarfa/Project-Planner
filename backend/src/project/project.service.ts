@@ -6,6 +6,14 @@ import { CreateProjectDto } from './dto';
 export class ProjectService {
   constructor(private readonly databaseService: DatabaseService) {}
 
+  private calculateProgress(dto: CreateProjectDto): number {
+    if (dto.totalTasks === 0) {
+      return 0;
+    } else {
+      return Math.floor((dto.tasksCompleted / dto.totalTasks) * 100);
+    }
+  }
+
   async createProject(dto: CreateProjectDto, userId: number) {
     const projectExist = await this.databaseService.project.findFirst({
       where: {
@@ -19,7 +27,6 @@ export class ProjectService {
     const newProject = await this.databaseService.project.create({
       data: {
         ...dto,
-        progress: (dto.tasksCompleted / dto.totalTasks) * 100,
         ownerId: userId,
       },
     });

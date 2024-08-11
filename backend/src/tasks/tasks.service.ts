@@ -12,9 +12,49 @@ export class TasksService {
         ...createTaskDto,
         columnId: createTaskDto.columnId,
       },
+      include: {
+        column: {
+          select: {
+            kanbanId: true,
+          },
+        },
+      },
     });
+
+    const kanbanId = taskCreated.column.kanbanId;
+    await this.updateKanbanTotalTasks(kanbanId, 'increment');
+
     return taskCreated;
   }
+  async deleteTask(taskId: number) {
+    try {
+      const task = await this.databaseService.task.findUnique({
+        where: { id: taskId },
+        include: {
+          column: {
+            select: {
+              kanbanId: true,
+            },
+          },
+        },
+      });
+      if (!task) {
+        throw new Error('Task not found');
+      }
+      const kanbanId = task.column.kanbanId;
+
+      await this.databaseService.task.delete({
+        where: { id: taskId },
+      });
+
+      await this.updateKanbanTotalTasks(kanbanId, 'decrement');
+
+      return { message: 'Task deleted successfully' };
+    } catch (error) {
+      throw new Error('Failed to delete task');
+    }
+  }
+
   async moveTaskToColumn(taskId: number, columnId: number) {
     const task = await this.databaseService.task.findUnique({
       where: {
@@ -30,5 +70,28 @@ export class TasksService {
         columnId: columnId,
       },
     });
+  }
+  private async updateKanbanTotalTasks(
+    kanbanId: number,
+    change: 'increment' | 'decrement',
+  ) {
+    try {
+      await this.databaseService.kanban.update({
+        where: {
+          id: kanbanId,
+        },
+        data: {
+          totalTasks: {
+            [change]: 1, // Uses the `change` parameter to either increment or decrement
+          },
+        },
+      });
+    } catch (error) {
+      console.error(
+        `Error updating totalTasks for Kanban ID ${kanbanId}:`,
+        error,
+      );
+      throw new Error('Failed to update totalTasks');
+    }
   }
 }

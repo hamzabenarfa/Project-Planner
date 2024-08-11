@@ -5,6 +5,7 @@ import {
   Put,
   ParseIntPipe,
   Param,
+  Delete,
 } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
@@ -17,6 +18,12 @@ export class TasksController {
   create(@Body() createTaskDto: CreateTaskDto) {
     return this.tasksService.create(createTaskDto);
   }
+
+  @Delete('/:taskId')
+  deleteTask(@Param('taskId', ParseIntPipe) taskId: number) {
+    return this.tasksService.deleteTask(taskId);
+  }
+
   @Put('/:taskId/:columnId')
   moveTaskToColumn(
     @Param('taskId', ParseIntPipe) taskId: number,
