@@ -1,46 +1,80 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Layers, Pin } from "lucide-react";
 import ProjectCard from "./project-card";
 import { Button } from "@/components/ui/button";
-import axiosInstance from "@/lib/axios-instance";
+import { useDeleteProject, useGetAllMyProject, usePinProject } from "@/hooks/useProject";
+import ProjectSkeleton from "./ProjectSkeleton";
+import { useEffect, useState } from "react";
+import { Id } from "@/types/kanban.type";
 import { ProjectType } from "@/types/project.type";
-
+import Toast from "react-hot-toast";
 const Project = () => {
-  const [data, setData] = useState<ProjectType[]>([]);
+  const { projectData, isLoading, error } = useGetAllMyProject();
+  const [projects, setProjects] = useState<ProjectType[]>([]);
+  const { deleteProject } = useDeleteProject();
+  const { pinProject } = usePinProject();
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axiosInstance<ProjectType[]>({
-          url: "/project/mine",
-        });
-        setData(response.data);
-      } catch (err) {
-        console.error("Error fetching data:", err);
+    if (projectData && Array.isArray(projectData.data)) {
+      setProjects(projectData.data);
+    }
+  }, [projectData]);
+
+  const handleDelete = (id: Id) => {
+    deleteProject(id, {
+      onSuccess: () => {
+        setProjects(prevProjects => 
+          Array.isArray(prevProjects) ? prevProjects.filter(project => project.id !== id) : []
+        );
+      },
+      onError: (error) => {
+        console.error("Failed to delete project:", error);
       }
-    };
+    });
+  };
+  const handlePin = (id: Id) => {
+    pinProject(id, {
+      onSuccess: () => {
+        Toast.success("Project pinned successfully");
+      },
+      onError: (error) => {
+        console.error("Failed to pin project:", error);
+      }
+    });
+  };
+  if (isLoading) {
+    return (
+      <div className="min-h-screen container">
+        <section className="space-y-4 p-4">
+          <ProjectSkeleton />
+        </section>
+      </div>
+    );
+  }
 
-    fetchData();
-  }, []);
-
-  const renderProjects = (pinned:boolean) =>
-    data
-      .filter((project) => project.pinned === pinned)
-      .map((project) => (
-        <ProjectCard
-          id={project.id}
-          key={project.id}
-          name={project.name}
-          status={project.status}
-          tasksCompleted={project.tasksCompleted}
-          totalTasks={project.totalTasks}
-          progress={project.progress}
-          updatedAt={project.updatedAt}
-        />
-      ));
+  const renderProjects = (pinned: boolean) => {
+    if (projects && Array.isArray(projects)) {
+      return projects
+        .filter((project) => project.pinned === pinned)
+        .map((project) => (
+          <ProjectCard
+            id={project.id}
+            key={project.id}
+            name={project.name}
+            status={project.status}
+            tasksCompleted={project.tasksCompleted}
+            totalTasks={project.totalTasks}
+            progress={project.progress}
+            updatedAt={project.updatedAt}
+            onDelete={handleDelete}
+            onPin={handlePin}
+          />
+        ));
+    }
+    return null;
+  };
 
   return (
     <div className="min-h-screen container">

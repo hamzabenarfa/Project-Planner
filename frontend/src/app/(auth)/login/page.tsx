@@ -43,7 +43,6 @@ const Login = () => {
       });
 
       const data:LoginResponse = await response.json();
-      console.log("🚀 ~ handleSubmit ~ data:", data)
       Toast.success(data.message)
 
       if (response.ok) {
