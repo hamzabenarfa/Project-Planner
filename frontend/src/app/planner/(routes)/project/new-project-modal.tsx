@@ -42,7 +42,7 @@ export function CreateNewProjectModal() {
               Add a new project to your workspace. Start by giving it a name.
             </DialogDescription>
           </DialogHeader>
-          <ProjectForm />
+          <ProjectForm onClose={() => setOpen(false)} />
         </DialogContent>
       </Dialog>
     );
@@ -60,7 +60,7 @@ export function CreateNewProjectModal() {
             Add a new project to your workspace. Start by giving it a name.
           </DrawerDescription>
         </DrawerHeader>
-        <ProjectForm className="px-4" />
+        <ProjectForm className="px-4" onClose={() => setOpen(false)} />
         <DrawerFooter className="pt-2">
           <DrawerClose asChild>
             <Button variant="outline">Cancel</Button>
@@ -71,8 +71,14 @@ export function CreateNewProjectModal() {
   );
 }
 import Toast from "react-hot-toast";
-function ProjectForm({ className }: React.ComponentProps<"form">) {
+import { Loader2 } from "lucide-react";
+interface ProjectFormProps {
+  className?: string;
+  onClose?: () => void;
+}
+function ProjectForm({ className, onClose }: ProjectFormProps) {
   const { createProject, status, error } = useCreateProject();
+  console.log("🚀 ~ ProjectForm ~ status:", status);
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
@@ -80,10 +86,11 @@ function ProjectForm({ className }: React.ComponentProps<"form">) {
     createProject(name, {
       onSuccess: () => {
         Toast.success("Project created successfully");
+        onClose?.();
       },
-      onError: (error:any) => {
+      onError: (error: any) => {
         Toast.error(error);
-      }
+      },
     });
   };
   return (
@@ -96,7 +103,11 @@ function ProjectForm({ className }: React.ComponentProps<"form">) {
         <Input type="text" id="projectName" name="projectName" />
       </div>
 
-      <Button type="submit">Save changes</Button>
+
+      <Button disabled={status === "pending"} type="submit">
+        {status === "pending" ? <Loader2 className="mx-auto animate-spin" /> : "Save changes"}
+        
+      </Button>
     </form>
   );
 }

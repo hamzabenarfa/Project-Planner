@@ -26,6 +26,7 @@ const Project = () => {
   const handleDelete = (id: Id) => {
     deleteProject(id, {
       onSuccess: () => {
+        Toast.success("Project deleted successfully");
         setProjects(prevProjects => 
           Array.isArray(prevProjects) ? prevProjects.filter(project => project.id !== id) : []
         );

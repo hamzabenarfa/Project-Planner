@@ -1,16 +1,17 @@
-
 import { NextRequest, NextResponse } from "next/server";
-import { cookies } from 'next/headers'
 
 export function middleware(request: NextRequest) {
+  const cookieStore = request.cookies;
+  const refreshToken = cookieStore.get("refresh_token");
+  const accessToken = cookieStore.get("access_token");
 
-  const cookieStore = cookies()
-  const refreshToken = cookieStore.get('refresh_token')
-  const accessToken = cookieStore.get("access_token")?.value;
+  if (!refreshToken) {
+    return NextResponse.redirect(new URL('/login', request.url))
+  }
 
-  
-  // Continue to the requested route
   return NextResponse.next();
 }
 
-// Define which routes this middleware applies to
+export const config = {
+  matcher: ['/planner/:path*'], 
+}

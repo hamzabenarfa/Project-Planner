@@ -44,3 +44,10 @@ export async function getTokenFromCookies(cookieName: string) {
   const cookieStore = cookies();
   return cookieStore.get(cookieName)?.value || null;
 }
+
+export async function removeCookies(cookieNames: string[]) {
+  const cookieStore = cookies();
+  cookieNames.forEach((cookieName) => {
+    cookieStore.delete(cookieName);
+  });
+}
