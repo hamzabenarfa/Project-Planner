@@ -17,7 +17,10 @@ const Sidebar = () => {
             className="p-2 font-semibold text-sm flex items-center gap-2"
           >
             <Icon className="w-6 h-6" />
-            <Link href={path.replace("[id]", String(params.id))}>{label}</Link>
+            <Link href={path.replace("[id]", String(params.id))}>{label} 
+            
+            </Link>
+             
           </li>
         ))}
       </ul>

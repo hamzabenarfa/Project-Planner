@@ -2,16 +2,26 @@
 import { Id, Task } from "@/types/kanban.type";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import TaskCardDrawer from "./TaskCardDrawer";
+import TaskNav from "./task-nav";
+import CheckboxList from "./checkbox-list-ticket";
+import CircleProgress from "./CircleProgress";
+import { cn } from "@/lib/utils";
+import { useEffect, useState } from "react";
+import { set } from "date-fns";
+import TaskFooter from "./task-footer";
 
+interface Colors {
+  primary: string;
+  secondary: string;
+}
 interface Props {
   task: Task;
+  bgColor: Colors;
   deleteTask: (id: Id) => void;
   updateTask: (id: Id, content: string) => void;
 }
 
-function TaskCard({ task, deleteTask, updateTask }: Props) {
-
+function TaskCard({ task, bgColor, deleteTask, updateTask }: Props) {
   const {
     setNodeRef,
     attributes,
@@ -45,23 +55,34 @@ function TaskCard({ task, deleteTask, updateTask }: Props) {
       />
     );
   }
+  console.log(bgColor);
 
-  
-
+  const gradientFrom = bgColor.primary ? `from-${bgColor.primary}-200` : 'from-gray-200';
+  const gradientTo = bgColor.secondary ? `to-${bgColor.secondary}-300` : 'to-gray-300';
   return (
     <div
       ref={setNodeRef}
       style={style}
       {...attributes}
       {...listeners}
-      className="bg-mainBackgroundColor shadow-sm p-2.5 h-[100px] min-h-[100px] items-start 
-                   flex text-left rounded-xl hover:ring-2 hover:ring-inset hover:ring-rose-500 
-                   cursor-grab relative task"
+      className={`p-2.5 h-[100px] min-h-[300px] flex flex-col items-start gap-4 text-left rounded-3xl hover:ring-2 hover:ring-inset hover:ring-blue-300 cursor-grab relative bg-gradient-to-r ${gradientFrom} ${gradientTo}`}
+
     >
-      <p className="select-none	 w-full whitespace-pre-wrap text-black ">
-        {task.name}
-      </p>
-      <TaskCardDrawer /> 
+        <TaskNav />
+
+        <p className="w-full whitespace-pre-wrap text-xl font-semibold text-white">
+          {task.name}
+        </p>
+
+        <div className="flex flex-col gap-2">
+          <CheckboxList label="Create user flow" />
+          <CheckboxList label="Make wireframe" />
+          <CheckboxList label="Design onboarding screens" />
+        </div>
+
+        <CircleProgress progress={40} />
+
+      <TaskFooter />
     </div>
   );
 }

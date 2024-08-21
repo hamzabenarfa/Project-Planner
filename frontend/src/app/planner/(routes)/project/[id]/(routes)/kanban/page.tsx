@@ -1,6 +1,6 @@
 "use client";
 
-import { PlusCircle, Trash } from "lucide-react";
+import { ChevronDown, PlusCircle, Trash } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { Column, Id, Task } from "@/types/kanban.type";
 import ColumnContainer from "./_components/ColumnContainer";
@@ -19,6 +19,9 @@ import { createPortal } from "react-dom";
 import TaskCard from "./_components/TaskCard";
 import api from "@/lib/axios-instance";
 import { useParams } from "next/navigation";
+import Toast from "react-hot-toast";
+import { Separator } from "@/components/ui/separator";
+import KanbanNavbar from "./_components/kanban-navbar";
 function KanbanBoard() {
   const projectId = useParams();
   const [columns, setColumns] = useState<Column[]>([]);
@@ -44,8 +47,6 @@ function KanbanBoard() {
     }
   }, [projectId.id]);
 
-  
-
   const [activeColumn, setActiveColumn] = useState<Column | null>(null);
   const [activeTask, setActiveTask] = useState<Task | null>(null);
 
@@ -67,24 +68,25 @@ function KanbanBoard() {
   return (
     <div
       className="
-        m-auto
-        flex flex-col p-2 
+        flex flex-col gap-4
         min-h-screen
         w-full
         items-center
         overflow-x-auto
         overflow-y-hidden
-        px-[40px]
+        px-[40px] p-10 
     "
     >
-      {/* <nav className=" bg-red-50 w-full h-40">kan</nav> */}
+      <KanbanNavbar />
+
+
       <DndContext
         sensors={sensors}
         onDragStart={onDragStart}
         onDragEnd={onDragEnd}
         onDragOver={onDragOver}
       >
-        <div className="m-auto flex-col md:flex-row items-start flex gap-4">
+        <div className=" flex-col md:flex-row items-start flex gap-4">
           <div className="flex gap-4 flex-col md:flex-row">
             <SortableContext items={columnsId}>
               {columns.map((col) => (
@@ -103,7 +105,7 @@ function KanbanBoard() {
               ))}
             </SortableContext>
           </div>
-          <button
+          {/* <button
             onClick={() => {
               createNewColumn();
             }}
@@ -125,7 +127,7 @@ function KanbanBoard() {
           >
             <PlusCircle />
             Add Column
-          </button>
+          </button> */}
         </div>
 
         {portalContainer &&
@@ -184,14 +186,10 @@ function KanbanBoard() {
   }
 
   function updateTask(id: Id, content: string) {
- 
-    
-    
     // const newTasks = tasks.map((task) => {
     //   if (task.id !== id) return task;
     //   return { ...task, content };
     // });
-
     // setTasks(newTasks);
   }
 
@@ -212,7 +210,8 @@ function KanbanBoard() {
 
       setColumns([...columns, columnToAdd]);
     } catch (error) {
-      console.error(error);
+      Toast.error(error.response.data.message);
+      console.error(error.response.data.message);
     }
   }
 

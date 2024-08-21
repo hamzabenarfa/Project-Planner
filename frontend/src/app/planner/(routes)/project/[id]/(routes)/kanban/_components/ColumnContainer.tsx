@@ -1,10 +1,11 @@
-"use client"
+"use client";
 import { SortableContext, useSortable } from "@dnd-kit/sortable";
 import { Column, Id, Task } from "@/types/kanban.type";
 import { CSS } from "@dnd-kit/utilities";
 import { useMemo, useState } from "react";
 import TaskCard from "./TaskCard";
-import { PlusCircle, Trash } from "lucide-react";
+import { EllipsisVertical, Plus, PlusCircle, Trash } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
 
 interface Props {
   column: Column;
@@ -29,8 +30,8 @@ function ColumnContainer({
   const [editMode, setEditMode] = useState(false);
   const tasksIds = useMemo(() => {
     return tasks && tasks.map((task) => task.id);
-  }, [tasks])
-  
+  }, [tasks]);
+
   const {
     setNodeRef,
     attributes,
@@ -44,7 +45,6 @@ function ColumnContainer({
       type: "Column",
       column,
     },
-    
   });
 
   const style = {
@@ -78,14 +78,14 @@ function ColumnContainer({
       ref={setNodeRef}
       style={style}
       className="
-  bg-columnBackgroundColor
-  w-[350px]
-  h-[500px]
-  max-h-[500px]
-  rounded-md
-  flex
-  flex-col
-  "
+      border-2
+          w-[300px]
+          max-h-[70vh]
+          
+          rounded-3xl
+          flex
+          flex-col
+          "
     >
       {/* Column title */}
       <div
@@ -95,15 +95,11 @@ function ColumnContainer({
           setEditMode(true);
         }}
         className="
-      bg-mainBackgroundColor
       text-md
       h-[60px]
       cursor-grab
-      rounded-md
       p-4
       font-bold
-      border-columnBackgroundColor
-      border-4
       flex
       items-center
       justify-between
@@ -124,28 +120,14 @@ function ColumnContainer({
           >
             {tasks ? tasks.length : "0"}
           </div>
-          {!editMode && column.name}
-          {editMode && (
-            <input
-              className=" focus:border-rose-500 text-black border rounded outline-none px-2"
-              value={column.name}
-              onChange={(e) => updateColumn(column.id, e.target.value)}
-              autoFocus
-              onBlur={() => {
-                setEditMode(false);
-              }}
-              onKeyDown={(e) => {
-                if (e.key !== "Enter") return;
-                setEditMode(false);
-              }}
-            />
-          )}
+          {column.name}
         </div>
-        <button
-          onClick={() => {
-            deleteColumn(column.id);
-          }}
-          className="
+        <div className="flex flex-row-reverse">
+          <button
+            onClick={() => {
+              return;
+            }}
+            className="
         stroke-gray-500
         hover:stroke-white
         hover:bg-columnBackgroundColor
@@ -153,26 +135,45 @@ function ColumnContainer({
         px-1
         py-2
         "
-        >
-          <Trash />
-        </button>
+          >
+            <EllipsisVertical />
+          </button>
+          <button
+            onClick={() => {
+              return;
+            }}
+            className="
+        stroke-gray-500
+        hover:stroke-white
+        hover:bg-columnBackgroundColor
+        rounded
+        px-1
+        py-2
+        "
+          >
+            <Plus />
+          </button>
+        </div>
       </div>
 
+      <Separator className="" />
       {/* Column task container */}
       <div className="flex flex-grow flex-col  gap-4 p-2 overflow-x-hidden overflow-y-auto">
         <SortableContext items={tasksIds}>
-          {tasks && tasks.map((task) => (
-            <TaskCard
-              key={task.id}
-              task={task}
-              deleteTask={deleteTask}
-              updateTask={updateTask}
-            />
-          ))}
+          {tasks &&
+            tasks.map((task) => (
+              <TaskCard
+                key={task.id}
+                task={task}
+                deleteTask={deleteTask}
+                updateTask={updateTask}
+                bgColor={{ primary: "blue", secondary: "red" }}
+              />
+            ))}
         </SortableContext>
       </div>
       {/* Column footer */}
-      <button
+      {/* <button
         className="flex gap-2 items-center border-columnBackgroundColor border-2 rounded-md p-4 border-x-columnBackgroundColor hover:bg-mainBackgroundColor hover:text-rose-500 active:bg-black"
         onClick={() => {
           createTask(column.id);
@@ -180,7 +181,7 @@ function ColumnContainer({
       >
         <PlusCircle />
         Add task
-      </button>
+      </button> */}
     </div>
   );
 }

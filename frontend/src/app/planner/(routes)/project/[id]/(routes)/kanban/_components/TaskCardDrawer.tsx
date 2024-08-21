@@ -9,13 +9,15 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 
-import { Edit2 } from "lucide-react";
+import {  EllipsisVertical } from "lucide-react";
 
 const TaskCardDrawer = () => {
   return (
     <Sheet>
       <SheetTrigger>
-        <Edit2 />
+        <Button variant="outline" size="icon" className=" bg-inherit">
+          <EllipsisVertical className=" text-white" />
+        </Button>
       </SheetTrigger>
       <SheetContent className=" w-full">
         <SheetHeader>
