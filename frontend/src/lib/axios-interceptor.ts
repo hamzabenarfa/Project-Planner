@@ -75,6 +75,6 @@ const setupInterceptors = (apiClient: Axios.AxiosInstance,accessToken:string) =>
 };
 
 export async function initAxios(axiosInstance: Axios.AxiosInstance) {
-  const at= await initializeToken();
+  const at= await initializeToken() ?? "";
   setupInterceptors(axiosInstance,at);
 }
