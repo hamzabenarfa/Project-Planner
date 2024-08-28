@@ -15,7 +15,7 @@ const TaskCardDrawer = () => {
   return (
     <Sheet>
       <SheetTrigger>
-        <Button variant="outline" size="icon" className=" bg-inherit">
+        <Button variant="outline" size="icon" className=" bg-inherit" asChild>
           <EllipsisVertical className=" text-white" />
         </Button>
       </SheetTrigger>

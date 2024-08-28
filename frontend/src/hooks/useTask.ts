@@ -14,7 +14,10 @@ export const useCreateTask = () => {
     mutationKey: [`create-task`],
     mutationFn: ({ projectId, data }: CreateTaskVariables) =>
       taskService.addTask(projectId, data),
-    onSettled: () => {
+    onSettled: (data, error, variables) => {
+      if (variables) {
+        queryClient.invalidateQueries({ queryKey: ["columns", variables.projectId] });
+      }
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
     },
     onSuccess: () => {

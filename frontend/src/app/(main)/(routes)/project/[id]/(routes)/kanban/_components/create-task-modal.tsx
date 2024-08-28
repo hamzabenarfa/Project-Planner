@@ -26,7 +26,7 @@ interface CreateTaskModalProps {
 export function CreateTaskModal({ projectId }: CreateTaskModalProps) {
   const { createTask, status, error } = useCreateTask();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  
+
   const [data, setData] = useState<Task>({
     name: "",
     description: "",
@@ -34,14 +34,18 @@ export function CreateTaskModal({ projectId }: CreateTaskModalProps) {
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    createTask({projectId, data});
-    if (status === "success") {
-        Toast.success("Task created successfully");
-      setIsDialogOpen(false);
-    }
-    if (error) {
-      Toast.error(error);
-    }
+    createTask(
+      { projectId, data },
+      {
+        onSuccess() {
+          Toast.success("Task created successfully");
+          setIsDialogOpen(false);
+        },
+        onError() {
+          Toast.error(error);
+        },
+      }
+    );
   }
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -85,11 +89,7 @@ export function CreateTaskModal({ projectId }: CreateTaskModalProps) {
           </div>
         </div>
         <DialogFooter>
-          <Button
-            type="submit"
-            className="w-full"
-            onClick={handleSubmit}
-          >
+          <Button type="submit" className="w-full" onClick={handleSubmit}>
             Save changes
           </Button>
         </DialogFooter>

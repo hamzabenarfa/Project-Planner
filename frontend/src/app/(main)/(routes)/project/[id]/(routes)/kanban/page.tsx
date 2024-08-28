@@ -1,7 +1,9 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Column, Id, Task } from "@/types/kanban.type";
+import { Id } from "@/types/kanban.type";
+import { Task } from "@/types/task.type";
+import { Column } from "@/types/column.type";
 import ColumnContainer from "./_components/ColumnContainer";
 import {
   DndContext,
@@ -20,31 +22,23 @@ import TaskCard from "./_components/TaskCard";
 import api from "@/lib/axios-instance";
 import { useParams } from "next/navigation";
 import KanbanNavbar from "./_components/kanban-navbar";
+import { useGetAllMyColumn } from "@/hooks/useColumn";
 
 function KanbanBoard() {
   const projectId = useParams();
+  const  { columnData, isLoading, status, error } = useGetAllMyColumn(projectId.id[0]);
   const [columns, setColumns] = useState<Column[]>([]);
   const [tasks, setTasks] = useState<Task[]>([]);
   const columnsId = useMemo(() => columns.map((col) => col.id), [columns]);
 
+
   useEffect(() => {
-    async function getColumns() {
-      try {
-        const response = await api<Column[]>({
-          url: `/column/all/${projectId.id}`,
-          method: "GET",
-        });
-        setColumns(response.data);
-        const allTasks = response.data.flatMap((column) => column.tasks || []);
-        setTasks(allTasks);
-      } catch (error) {
-        console.error(error);
-      }
+    if (columnData) {
+      setColumns(columnData?.data);
+      const allTasks = columnData?.data.map((column) => column.tasks || []).flat();
+      setTasks(allTasks);
     }
-    if (projectId.id) {
-      getColumns();
-    }
-  }, [projectId.id]);
+  }, [columnData]);
 
   const [activeColumn, setActiveColumn] = useState<Column | null>(null);
   const [activeTask, setActiveTask] = useState<Task | null>(null);
@@ -64,7 +58,6 @@ function KanbanBoard() {
     setPortalContainer(document.body);
   }, []);
 
-  console.log("typeeee", typeof projectId.id);
   return (
     <div className=" flex flex-col gap-4 min-h-screen w-full items-center overflow-x-auto overflow-y-hidden px-[40px] p-10 ">
       <KanbanNavbar projectId={projectId.id[0]} />
