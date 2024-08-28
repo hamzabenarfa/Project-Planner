@@ -4,6 +4,7 @@ import { DatabaseService } from 'src/database/database.service';
 @Injectable()
 export class KanbanService {
   constructor(private readonly databaseService: DatabaseService) {}
+
   async updateKanbanTotalTasks(
     kanbanId: number,
     change: 'increment' | 'decrement',

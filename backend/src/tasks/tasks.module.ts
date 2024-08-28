@@ -5,6 +5,6 @@ import { KanbanService } from 'src/kanban/kanban.service';
 
 @Module({
   controllers: [TasksController],
-  providers: [TasksService,KanbanService],
+  providers: [TasksService, KanbanService],
 })
 export class TasksModule {}

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { CreateColumnDto } from './dto/create-column.dto';
 import { DatabaseService } from 'src/database/database.service';
 import { UpdateColumnDto } from './dto/update-column.dto';
@@ -8,15 +8,25 @@ export class ColumnService {
   constructor(private readonly databaseService: DatabaseService) {}
 
   async create(createColumnDto: CreateColumnDto) {
-    const kanban = await this.findKanbanByProjectId(createColumnDto.projectId);
-    const columnCreated = await this.databaseService.column.create({
-      data: {
-        name: createColumnDto.name,
-        kanbanId: kanban.id,
-        done: createColumnDto.name.toLowerCase() === 'done' ? true : false,
-      },
-    });
-    return columnCreated;
+    // const kanban = await this.findKanbanByProjectId(createColumnDto.projectId);
+    // const existingColumn = await this.databaseService.column.findFirst({
+    //   where: {
+    //     name: createColumnDto.name,
+    //     kanbanId: kanban.id,
+    //   },
+    // });
+    // if (existingColumn) {
+    //   throw new HttpException('Column name already exists', 400);
+    // }
+    // const columnCreated = await this.databaseService.column.create({
+    //   data: {
+    //     name: createColumnDto.name,
+    //     kanbanId: kanban.id,
+    //     done: createColumnDto.name.toLowerCase() === 'done' ? true : false,
+    //   },
+    // });
+    // return columnCreated;
+    return;
   }
 
   async getEachColumn(columnId: number) {

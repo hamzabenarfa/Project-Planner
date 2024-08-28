@@ -10,11 +10,11 @@ async function initializeToken() {
   }
 }
 
-const setupInterceptors = (apiClient: Axios.AxiosInstance,accessToken:string) => {
+const setupInterceptors = (apiClient: Axios.AxiosInstance) => {
   apiClient.interceptors.request.use(
-    (config) => {
+    async (config) => {
       try {
-        
+        const accessToken = await getTokenFromCookies("access_token");
         if (accessToken) {
           if (config.headers) {
             config.headers.Authorization = `Bearer ${accessToken}`;
@@ -75,6 +75,6 @@ const setupInterceptors = (apiClient: Axios.AxiosInstance,accessToken:string) =>
 };
 
 export async function initAxios(axiosInstance: Axios.AxiosInstance) {
-  const at= await initializeToken() ?? "";
-  setupInterceptors(axiosInstance,at);
+  //const at = (await initializeToken()) ?? "";
+  setupInterceptors(axiosInstance);
 }

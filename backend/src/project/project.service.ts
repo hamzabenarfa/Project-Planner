@@ -27,10 +27,19 @@ export class ProjectService {
       },
     });
 
-    await this.databaseService.kanban.create({
+    const kanban = await this.databaseService.kanban.create({
       data: {
         projectId: newProject.id,
       },
+    });
+
+    await this.databaseService.column.createMany({
+      data: [
+        { name: 'Todo', columnType: 'TODO', kanbanId: kanban.id },
+        { name: 'in progress', columnType: 'INPROGRESS', kanbanId: kanban.id },
+        { name: 'in review', columnType: 'InReview', kanbanId: kanban.id },
+        { name: 'done', columnType: 'DONE', kanbanId: kanban.id },
+      ],
     });
     return newProject;
   }
@@ -48,12 +57,11 @@ export class ProjectService {
     const projectsWithProgress = await Promise.all(
       projects.map(async (project) => {
         const progress = await this.projectKpiService.getMyProjectProgress(
-          userId,
           project.id,
         );
         return {
           ...project,
-          ...progress, // Include progress in the project data
+          ...progress,
         };
       }),
     );

@@ -6,12 +6,12 @@ services:
     container_name: project_planner_mysql_db
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: root_password  # Replace with your desired root password
-      MYSQL_DATABASE: project_planner      # The name of the database to create
+      MYSQL_ROOT_PASSWORD: root_password  
+      MYSQL_DATABASE: project_planner      
     ports:
       - "3306:3306"
     volumes:
-      - mysql_data:/var/lib/mysql          # Mount a volume to persist MySQL data
+      - mysql_data:/var/lib/mysql        
 
 volumes:
   mysql_data:

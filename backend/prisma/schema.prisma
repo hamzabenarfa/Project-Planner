@@ -127,10 +127,20 @@ model Kanban {
   @@map("kanbans")
 }
 
+
+enum ColumnType {
+  TODO
+  INPROGRESS
+  InReview
+  DONE
+}
+
 model Column {
   id        Int     @id @default(autoincrement())
   name      String
-  done Boolean @default(false)
+  done      Boolean @default(false)
+  columnType ColumnType
+
   kanbanId  Int
 
   createdAt DateTime @default(now())

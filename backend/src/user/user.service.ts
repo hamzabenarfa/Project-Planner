@@ -32,6 +32,11 @@ export class UserService {
           id: userId,
         },
       },
+      select: {
+        id: true,
+        email: true,
+        role: true,
+      },
     });
   }
 }
