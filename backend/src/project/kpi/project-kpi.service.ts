@@ -23,7 +23,7 @@ export class ProjectKpiService {
     return {
       completedTasks,
       totalTasks,
-      progress: Math.floor((completedTasks / totalTasks) * 100),
+      progress: Math.floor((completedTasks / totalTasks) * 100) || 0,
     };
   }
 

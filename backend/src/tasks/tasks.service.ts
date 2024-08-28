@@ -31,32 +31,28 @@ export class TasksService {
     return taskCreated;
   }
   async deleteTask(taskId: number) {
-    try {
-      const task = await this.databaseService.task.findUnique({
-        where: { id: taskId },
-        include: {
-          column: {
-            select: {
-              kanbanId: true,
-            },
+    const task = await this.databaseService.task.findFirst({
+      where: { id: taskId },
+      include: {
+        column: {
+          select: {
+            kanbanId: true,
           },
         },
-      });
-      if (!task) {
-        throw new Error('Task not found');
-      }
-      const kanbanId = task.column.kanbanId;
-
-      await this.databaseService.task.delete({
-        where: { id: taskId },
-      });
-
-      await this.kanbanService.updateKanbanTotalTasks(kanbanId, 'decrement');
-
-      return { message: 'Task deleted successfully' };
-    } catch (error) {
-      throw new Error('Failed to delete task');
+      },
+    });
+    if (!task) {
+      throw new HttpException('Task not found', HttpStatus.NOT_FOUND);
     }
+    const kanbanId = task.column.kanbanId;
+
+    await this.databaseService.task.delete({
+      where: { id: taskId },
+    });
+
+    await this.kanbanService.updateKanbanTotalTasks(kanbanId, 'decrement');
+
+    return { message: 'Task deleted successfully' };
   }
 
   async moveTaskToColumn(taskId: number, columnId: number) {
@@ -94,34 +90,6 @@ export class TasksService {
       },
     });
 
-    const completedStatus = movedTask.column.done;
-    const kanbanId = movedTask.column.kanbanId;
-    await this.updateTaskCompletionStatus(kanbanId, taskId, completedStatus);
-
     return movedTask;
-  }
-
-  private async updateTaskCompletionStatus(
-    kanbanId: number,
-    taskId: number,
-    completed: boolean,
-  ) {
-    try {
-      await this.databaseService.task.update({
-        where: { id: taskId },
-        data: { completed },
-      });
-      completed
-        ? this.kanbanService.updateKanbanTotalTasksCompleted(
-            kanbanId,
-            'increment',
-          )
-        : this.kanbanService.updateKanbanTotalTasksCompleted(
-            kanbanId,
-            'decrement',
-          );
-    } catch (error) {
-      throw new HttpException('Failed to update task completion status', 500);
-    }
   }
 }

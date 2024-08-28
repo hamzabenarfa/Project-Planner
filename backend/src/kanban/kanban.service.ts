@@ -28,27 +28,5 @@ export class KanbanService {
       throw new Error('Failed to update totalTasks');
     }
   }
-  async updateKanbanTotalTasksCompleted(
-    kanbanId: number,
-    change: 'increment' | 'decrement',
-  ) {
-    try {
-      await this.databaseService.kanban.update({
-        where: {
-          id: kanbanId,
-        },
-        data: {
-          totalTasksCompleted: {
-            [change]: 1, // Uses the `change` parameter to either increment or decrement
-          },
-        },
-      });
-    } catch (error) {
-      console.error(
-        `Error updating totalTasksCompleted for Kanban ID ${kanbanId}:`,
-        error,
-      );
-      throw new Error('Failed to update totalTasksCompleted');
-    }
-  }
+
 }
