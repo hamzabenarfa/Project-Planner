@@ -1,5 +1,5 @@
 import axios from "axios";
-import { setupInterceptors } from "./axios-interceptor";
+import { initAxios } from "./axios-interceptor";
 
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
@@ -10,7 +10,12 @@ const api = axios.create({
   withCredentials: true,
 });
 
-setupInterceptors(api);
-
+(async () => {
+  try {
+    await initAxios(api);
+  } catch (error) {
+    console.error("Failed to initialize Axios:", error);
+  }
+})();
 
 export default api;

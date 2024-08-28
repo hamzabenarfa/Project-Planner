@@ -1,11 +1,20 @@
 import axiosInstance from "./axios-instance";
 import { getTokenFromCookies, removeCookies, setCookies } from "./cookieUtils";
 import axios from "axios";
-export const setupInterceptors = (apiClient: Axios.AxiosInstance) => {
+
+async function initializeToken() {
+  try {
+    return await getTokenFromCookies("access_token");
+  } catch (error) {
+    console.error("Error initializing token:", error);
+  }
+}
+
+const setupInterceptors = (apiClient: Axios.AxiosInstance,accessToken:string) => {
   apiClient.interceptors.request.use(
-    async (config) => {
+    (config) => {
       try {
-        const accessToken = await getTokenFromCookies("access_token");
+        
         if (accessToken) {
           if (config.headers) {
             config.headers.Authorization = `Bearer ${accessToken}`;
@@ -64,3 +73,8 @@ export const setupInterceptors = (apiClient: Axios.AxiosInstance) => {
     }
   );
 };
+
+export async function initAxios(axiosInstance: Axios.AxiosInstance) {
+  const at= await initializeToken();
+  setupInterceptors(axiosInstance,at);
+}
