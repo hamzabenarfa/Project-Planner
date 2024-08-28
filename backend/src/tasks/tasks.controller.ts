@@ -19,6 +19,13 @@ export class TasksController {
     return this.tasksService.create(createTaskDto);
   }
 
+  @Post('/add-by-project/:projectId')
+  addTask(
+    @Param('projectId', ParseIntPipe) projectId: number,
+    @Body() createTaskDto: CreateTaskDto,
+  ) {
+    return this.tasksService.addTask(projectId, createTaskDto);
+  }
   @Delete('/:taskId')
   deleteTask(@Param('taskId', ParseIntPipe) taskId: number) {
     return this.tasksService.deleteTask(taskId);

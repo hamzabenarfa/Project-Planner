@@ -30,6 +30,30 @@ export class TasksService {
 
     return taskCreated;
   }
+  async addTask(projectId: number, createTaskDto: CreateTaskDto) {
+    const todoColumn = await this.databaseService.column.findFirst({
+      where: { kanbanId: projectId, columnType: 'TODO' },
+    });
+
+    const taskCreated = await this.databaseService.task.create({
+      data: {
+        ...createTaskDto,
+        columnId: todoColumn.id,
+      },
+      include: {
+        column: {
+          select: {
+            kanbanId: true,
+          },
+        },
+      },
+    });
+    const kanbanId = taskCreated.column.kanbanId;
+    this.kanbanService.updateKanbanTotalTasks(kanbanId, 'increment');
+
+    return taskCreated;
+  }
+
   async deleteTask(taskId: number) {
     const task = await this.databaseService.task.findFirst({
       where: { id: taskId },

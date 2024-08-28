@@ -154,6 +154,8 @@ model Column {
 model Task {
   id        Int      @id @default(autoincrement())
   name      String
+  
+  description String? @db.LongText
   columnId  Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

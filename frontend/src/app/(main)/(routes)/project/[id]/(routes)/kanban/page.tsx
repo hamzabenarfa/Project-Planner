@@ -20,6 +20,7 @@ import TaskCard from "./_components/TaskCard";
 import api from "@/lib/axios-instance";
 import { useParams } from "next/navigation";
 import KanbanNavbar from "./_components/kanban-navbar";
+
 function KanbanBoard() {
   const projectId = useParams();
   const [columns, setColumns] = useState<Column[]>([]);
@@ -63,9 +64,10 @@ function KanbanBoard() {
     setPortalContainer(document.body);
   }, []);
 
+  console.log("typeeee", typeof projectId.id);
   return (
     <div className=" flex flex-col gap-4 min-h-screen w-full items-center overflow-x-auto overflow-y-hidden px-[40px] p-10 ">
-      <KanbanNavbar />
+      <KanbanNavbar projectId={projectId.id[0]} />
 
       <DndContext
         sensors={sensors}

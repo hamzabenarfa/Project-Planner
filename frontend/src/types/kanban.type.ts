@@ -1,3 +1,5 @@
+import { Task } from "./task.type";
+
 export type Id = number | string;
 
 export type Column = {
@@ -6,8 +8,3 @@ export type Column = {
   tasks?: Task[];
 };
 
-export type Task = {
-  id?: Id;
-  columnId: Id;
-  name: string;
-};

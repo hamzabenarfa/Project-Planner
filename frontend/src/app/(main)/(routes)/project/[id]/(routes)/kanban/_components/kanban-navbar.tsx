@@ -1,9 +1,18 @@
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { format } from "date-fns";
-import { ChevronDown, ListFilter, Plus } from "lucide-react";
+import { ListFilter } from "lucide-react";
+import { CreateTaskModal } from "./create-task-modal";
+import { Id } from "@/types/kanban.type";
+import { Id } from "react-beautiful-dnd";
+import { useCreateTask } from "@/hooks/useTask";
+import { create } from "axios";
 
-const KanbanNavbar = () => {
+interface KanbanNavbarProps {
+  projectId: Id;
+}
+
+const KanbanNavbar = ({ projectId }: KanbanNavbarProps) => {
   const data = [
     {
       src: "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=facearea&facepad=2&w=300&h=300&q=80",
@@ -23,7 +32,7 @@ const KanbanNavbar = () => {
       alt: "Image Description",
     },
   ];
-  const currentDate =  format(new Date(), "EEEE, MMMM do yyyy");
+  const currentDate = format(new Date(), "EEEE, MMMM do yyyy");
   const currentMonth = format(new Date(), "MMMM");
   return (
     <nav className=" flex flex-col gap-2 md:flex-row items-center justify-between border-[2px]  space-x-4  w-full rounded-3xl p-4 ">
@@ -50,10 +59,16 @@ const KanbanNavbar = () => {
             />
           ))}
         </div>
-        <Separator className="hidden md:block h-12 w-[1.5px] " orientation="vertical" />
-          
-        <Button variant="outline" className="hidden md:flex gap-2"><ListFilter />Filters</Button>
-        <Button className="  gap-2"><Plus />Create Tasks</Button>
+        <Separator
+          className="hidden md:block h-12 w-[1.5px] "
+          orientation="vertical"
+        />
+
+        <Button variant="outline" className="hidden md:flex gap-2">
+          <ListFilter />
+          Filters
+        </Button>
+        <CreateTaskModal projectId={projectId} />
       </div>
     </nav>
   );

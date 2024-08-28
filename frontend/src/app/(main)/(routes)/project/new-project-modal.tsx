@@ -78,7 +78,6 @@ interface ProjectFormProps {
 }
 function ProjectForm({ className, onClose }: ProjectFormProps) {
   const { createProject, status, error } = useCreateProject();
-  console.log("🚀 ~ ProjectForm ~ status:", status);
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
