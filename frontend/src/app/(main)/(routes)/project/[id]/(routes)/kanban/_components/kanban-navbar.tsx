@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { format } from "date-fns";
 import { ChevronDown, ListFilter, Plus } from "lucide-react";
 
 const KanbanNavbar = () => {
@@ -22,21 +23,23 @@ const KanbanNavbar = () => {
       alt: "Image Description",
     },
   ];
+  const currentDate =  format(new Date(), "EEEE, MMMM do yyyy");
+  const currentMonth = format(new Date(), "MMMM");
   return (
-    <nav className=" flex flex-row items-center justify-between border-[2px]  space-x-4  w-full rounded-3xl p-4 ">
+    <nav className=" flex flex-col gap-2 md:flex-row items-center justify-between border-[2px]  space-x-4  w-full rounded-3xl p-4 ">
       <div className="flex items-center flex-row gap-2">
         <div>
-          <h1 className=" font-bold text-xl">August</h1>
-          <p>Today is Friday , August 16th 2024</p>
+          <h1 className=" font-bold text-xl">{currentMonth}</h1>
+          <p>Today is {currentDate}</p>
         </div>
-        <Separator className=" h-12 w-[1.5px] " orientation="vertical" />
-        <div className="flex flex-row gap-1 items-center">
+        {/* <Separator className=" h-12 w-[1.5px] " orientation="vertical" /> */}
+        {/* <div className="flex flex-row gap-1 items-center">
           <h1 className=" font-bold text-xl">Board -</h1> 
           <span>Daily Tasks</span> <ChevronDown />
-        </div>
+        </div> */}
       </div>
       <div className="flex items-center flex-row gap-2">
-        <div className="flex -space-x-4">
+        <div className="hidden md:flex -space-x-4">
           {data.map((item, i) => (
             // eslint-disable-next-line @next/next/no-img-element
             <img
@@ -47,10 +50,10 @@ const KanbanNavbar = () => {
             />
           ))}
         </div>
-        <Separator className=" h-12 w-[1.5px] " orientation="vertical" />
-
-        <Button variant="outline" className=" gap-2"><ListFilter />Filters</Button>
-        <Button className="gap-2"><Plus />Create Tasks</Button>
+        <Separator className="hidden md:block h-12 w-[1.5px] " orientation="vertical" />
+          
+        <Button variant="outline" className="hidden md:flex gap-2"><ListFilter />Filters</Button>
+        <Button className="  gap-2"><Plus />Create Tasks</Button>
       </div>
     </nav>
   );

@@ -8,12 +8,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import Link from "next/link";
 
 const ProfileDropdownMenu = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
-        <Avatar >
+        <Avatar>
           <AvatarImage src="https://github.com/shadcn.png" />
           <AvatarFallback>CN</AvatarFallback>
         </Avatar>
@@ -21,7 +22,9 @@ const ProfileDropdownMenu = () => {
       <DropdownMenuContent>
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>Profile</DropdownMenuItem>
+        <DropdownMenuItem>
+          <Link href="/profile">Profile</Link>
+        </DropdownMenuItem>
         <DropdownMenuItem>Projects</DropdownMenuItem>
         <DropdownMenuItem>Team</DropdownMenuItem>
         <DropdownMenuItem>Logout</DropdownMenuItem>

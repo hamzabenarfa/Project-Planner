@@ -32,7 +32,7 @@ const CreateNewTeam = () => {
         Toast.success("Team created");
         setIsDialogOpen(false);
       }
-    } catch (error) {
+    } catch (error : any) {
       Toast.error(error.response.data.message);
     }
   };

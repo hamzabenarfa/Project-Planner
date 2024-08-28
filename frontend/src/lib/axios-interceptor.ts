@@ -1,7 +1,7 @@
 import axiosInstance from "./axios-instance";
 import { getTokenFromCookies, removeCookies, setCookies } from "./cookieUtils";
 import axios from "axios";
-export const setupInterceptors = (apiClient) => {
+export const setupInterceptors = (apiClient: Axios.AxiosInstance) => {
   apiClient.interceptors.request.use(
     async (config) => {
       try {
@@ -17,7 +17,6 @@ export const setupInterceptors = (apiClient) => {
       return config;
     },
     (error: any) => {
-      console.error("Request interceptor error:", error);
       return Promise.reject(error);
     }
   );
@@ -52,10 +51,7 @@ export const setupInterceptors = (apiClient) => {
 
           originalRequest.headers.Authorization = `Bearer ${accessToken}`;
           return axiosInstance(originalRequest);
-        } catch (refreshError) {
-          console.error("Failed to refresh token:", refreshError.response.data);
-          
-
+        } catch (refreshError: any) {
           if (refreshError.response.status === 403) {
             removeCookies(["access_token", "refresh_token"]);
           }

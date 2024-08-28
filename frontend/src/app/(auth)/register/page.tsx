@@ -32,10 +32,10 @@ const Register = () => {
         <CardContent className=" w-full space-y-4">
           <div>
             <Label htmlFor="email">Your email address</Label>
-            <Input label="Email" type="email" />
+            <Input  id="email" type="email" />
 
-            <Label htmlFor="Password">Your Password</Label>
-            <Input label="Password" type="password" />
+            <Label htmlFor="password">Your Password</Label>
+            <Input id="password" type="password" />
           </div>
 
           <Select>

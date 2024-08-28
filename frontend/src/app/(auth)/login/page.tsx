@@ -46,9 +46,9 @@ const Login = () => {
       Toast.success(data.message)
 
       if (response.ok) {
-        data.role === "MANAGER" ? router.push("/planner/project") : router.push("/")
+        data.role === "MANAGER" ? router.push("/project") : router.push("/")
       } 
-    } catch (error) {
+    } catch (error:any) {
       Toast.error(error)
     }
   };

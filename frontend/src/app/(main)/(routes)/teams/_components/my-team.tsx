@@ -23,10 +23,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import AddMember from "./add-member";
+import { Team, TeamMember } from "@/types/team.type";
 
 const MyTeam = () => {
-  const [team, setTeam] = useState({});
-  const [teamMembers, setTeamMembers] = useState([]);
+  const [team, setTeam] = useState<Team | null>(null); 
+  const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
   useEffect(() => {
     getMyTeam();
     getMyTeamMembers();
@@ -34,17 +35,17 @@ const MyTeam = () => {
 
   const getMyTeam = async () => {
     try {
-      const response = await axiosInstance({ url: "/team/mine" });
+      const response = await axiosInstance<Team>({ url: "/team/mine" });
       setTeam(response.data);
-    } catch (error) {
+    } catch (error :any) {
       Toast.error(error.response.data.message);
     }
   };
   const getMyTeamMembers = async () => {
     try {
-      const response = await axiosInstance({ url: "/team-members/my-team" });
+      const response = await axiosInstance<TeamMember[]>({ url: "/team-members/my-team" });
       setTeamMembers(response.data);
-    } catch (error) {
+    } catch (error: any) {
       console.log(error.response.data.message);
     }
   };

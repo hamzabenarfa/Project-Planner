@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import axiosInstance from "@/lib/axios-instance";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -19,16 +18,17 @@ import {
   FormItem,
   FormLabel,
 } from "@/components/ui/form";
-import Toast from "react-hot-toast";
+import api from "@/lib/axios-instance";
+import { User } from "@/types/user.type";
 const formSchema = z.object({
   memberId: z.string().optional(),
 });
 const SelectForm = () => {
-  const [members, setMembers] = useState([]);
+  const [members, setMembers] = useState<User[]>([]);
   useEffect(() => {
     const fetchMembers = async () => {
       try {
-        const response = await axiosInstance({ url: "/user/all-exept-me" });
+        const response = await api<User[]>({ url: "/user/all-exept-me" });
         setMembers(response.data);
       } catch (error) {
         console.error("Error fetching members:", error);
@@ -46,12 +46,11 @@ const SelectForm = () => {
   });
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     try {
-      const result = await axiosInstance({
+      const result = await api({
         url: `/team-members/add-existing-member/${data.memberId}`,
         method: "POST",
       });
-      console.log("🚀 ~ onSubmit ~ result:", result);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Unexpected error:", error.response.data);
     }
   };
@@ -66,20 +65,22 @@ const SelectForm = () => {
             <FormItem>
               <FormLabel>Member</FormLabel>
               <Select
-                onValueChange={(value) => { field.onChange(value)}}
+                onValueChange={(value) => {
+                  field.onChange(value);
+                }}
                 value={field.value || ""}
               >
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue>
-                    {members.find(member => member.id == field.value)?.email || "Select email"}
-
+                      {members.find((member) => member.id == field.value)
+                        ?.email || "Select email"}
                     </SelectValue>
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
                   {members.map((member) => (
-                    <SelectItem key={member.id} value={member.id}>
+                    <SelectItem key={member.id} value={member.id.toString()}>
                       {member.email}
                     </SelectItem>
                   ))}

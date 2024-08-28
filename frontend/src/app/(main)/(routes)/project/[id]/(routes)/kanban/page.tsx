@@ -1,6 +1,5 @@
 "use client";
 
-import { ChevronDown, PlusCircle, Trash } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { Column, Id, Task } from "@/types/kanban.type";
 import ColumnContainer from "./_components/ColumnContainer";
@@ -11,6 +10,7 @@ import {
   DragOverlay,
   DragStartEvent,
   PointerSensor,
+  UniqueIdentifier,
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
@@ -19,8 +19,6 @@ import { createPortal } from "react-dom";
 import TaskCard from "./_components/TaskCard";
 import api from "@/lib/axios-instance";
 import { useParams } from "next/navigation";
-import Toast from "react-hot-toast";
-import { Separator } from "@/components/ui/separator";
 import KanbanNavbar from "./_components/kanban-navbar";
 function KanbanBoard() {
   const projectId = useParams();
@@ -31,12 +29,12 @@ function KanbanBoard() {
   useEffect(() => {
     async function getColumns() {
       try {
-        const response = await api({
+        const response = await api<Column[]>({
           url: `/column/all/${projectId.id}`,
           method: "GET",
         });
         setColumns(response.data);
-        const allTasks = response.data.flatMap((column) => column.tasks);
+        const allTasks = response.data.flatMap((column) => column.tasks || []);
         setTasks(allTasks);
       } catch (error) {
         console.error(error);
@@ -66,19 +64,8 @@ function KanbanBoard() {
   }, []);
 
   return (
-    <div
-      className="
-        flex flex-col gap-4
-        min-h-screen
-        w-full
-        items-center
-        overflow-x-auto
-        overflow-y-hidden
-        px-[40px] p-10 
-    "
-    >
+    <div className=" flex flex-col gap-4 min-h-screen w-full items-center overflow-x-auto overflow-y-hidden px-[40px] p-10 ">
       <KanbanNavbar />
-
 
       <DndContext
         sensors={sensors}
@@ -93,11 +80,7 @@ function KanbanBoard() {
                 <ColumnContainer
                   key={col.id}
                   column={col}
-                  deleteColumn={deleteColumn}
-                  updateColumn={updateColumn}
                   createTask={createTask}
-                  deleteTask={deleteTask}
-                  updateTask={updateTask}
                   tasks={
                     tasks && tasks.filter((task) => task.columnId === col.id)
                   }
@@ -105,29 +88,6 @@ function KanbanBoard() {
               ))}
             </SortableContext>
           </div>
-          {/* <button
-            onClick={() => {
-              createNewColumn();
-            }}
-            className="
-                h-[60px]
-                w-[350px]
-                min-w-[350px]
-                cursor-pointer
-                rounded-lg
-                bg-mainBackgroundColor
-                border-2
-                border-columnBackgroundColor
-                p-4
-                ring-rose-500
-                hover:ring-2
-                flex
-                gap-2 
-                "
-          >
-            <PlusCircle />
-            Add Column
-          </button> */}
         </div>
 
         {portalContainer &&
@@ -136,24 +96,14 @@ function KanbanBoard() {
               {activeColumn && (
                 <ColumnContainer
                   column={activeColumn}
-                  deleteColumn={deleteColumn}
-                  updateColumn={updateColumn}
                   createTask={createTask}
-                  deleteTask={deleteTask}
-                  updateTask={updateTask}
                   tasks={
                     tasks &&
                     tasks.filter((task) => task.columnId === activeColumn.id)
                   }
                 />
               )}
-              {activeTask && (
-                <TaskCard
-                  task={activeTask}
-                  deleteTask={deleteTask}
-                  updateTask={updateTask}
-                />
-              )}
+              {activeTask && <TaskCard task={activeTask} />}
             </DragOverlay>,
             document.body
           )}
@@ -163,11 +113,12 @@ function KanbanBoard() {
 
   async function createTask(columnId: Id) {
     try {
-      const response = await api({
+      const response = await api<Task>({
         url: "/tasks",
         method: "POST",
         data: { name: `Task ${tasks.length + 1}`, columnId },
       });
+      const data = response.data;
       const newTask: Task = {
         id: response.data.id,
         columnId,
@@ -177,73 +128,6 @@ function KanbanBoard() {
       setTasks([...tasks, newTask]);
     } catch (error) {
       console.error(error);
-    }
-  }
-
-  function deleteTask(id: Id) {
-    const newTasks = tasks.filter((task) => task.id !== id);
-    setTasks(newTasks);
-  }
-
-  function updateTask(id: Id, content: string) {
-    // const newTasks = tasks.map((task) => {
-    //   if (task.id !== id) return task;
-    //   return { ...task, content };
-    // });
-    // setTasks(newTasks);
-  }
-
-  async function createNewColumn() {
-    try {
-      const response = await api({
-        url: "/column",
-        method: "POST",
-        data: {
-          projectId: parseInt(projectId.id),
-          name: `Column ${columns.length + 1}`,
-        },
-      });
-      const columnToAdd: Column = {
-        id: response.data.id,
-        name: response.data.name,
-      };
-
-      setColumns([...columns, columnToAdd]);
-    } catch (error) {
-      Toast.error(error.response.data.message);
-      console.error(error.response.data.message);
-    }
-  }
-
-  async function deleteColumn(id: Id) {
-    try {
-      await api({ url: `/column/${id}`, method: "DELETE" });
-      const filteredColumns = columns.filter((col) => col.id !== id);
-      setColumns(filteredColumns);
-
-      const newTasks = tasks.filter((t) => t.columnId !== id);
-      setTasks(newTasks);
-    } catch (err) {
-      console.log(err);
-    }
-  }
-
-  async function updateColumn(id: Id, name: string) {
-    try {
-      await api({
-        url: `/column/${id}`,
-        method: "PUT",
-        data: { name: name },
-      });
-
-      const newColumns = columns.map((col) => {
-        if (col.id !== id) return col;
-        return { ...col, name };
-      });
-
-      setColumns(newColumns);
-    } catch (error) {
-      console.log("🚀 ~ updateColumn ~ error:", error);
     }
   }
 
@@ -327,14 +211,15 @@ function KanbanBoard() {
     }
   }
 
-  async function moveTaskToColumn(taskId, columnId) {
+  async function moveTaskToColumn(
+    taskId: UniqueIdentifier,
+    columnId: UniqueIdentifier
+  ) {
     try {
       const response = await api({
         url: `/tasks/${taskId}/${columnId}`,
         method: "PUT",
       });
-
-      console.log(response.data);
     } catch (error) {
       console.error("Error:", error);
     }

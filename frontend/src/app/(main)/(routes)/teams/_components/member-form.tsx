@@ -36,8 +36,7 @@ const MemberForm = () => {
         method: "POST",
         data: { email: data.email, password: data.password },
       });
-      console.log("🚀 ~ onSubmit ~ result:", res);
-    } catch (error) {
+    } catch (error : any) {
       console.error("Unexpected error:", error.response.data);
     }
   };

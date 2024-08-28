@@ -8,7 +8,7 @@ const Sidebar = () => {
   const params = useParams();
 
   return (
-    <div className=" text-black w-64 border-r flex  flex-col border-gray-200">
+    <div className=" text-black hidden w-64 border-r md:flex  flex-col border-gray-200">
       <div className="py-5 px-6 font-bold text-lg ">Manager dashboard</div>
       <ul className="flex-1 p-6 space-y-4">
         {routes.map(({ path, label, icon: Icon }) => (

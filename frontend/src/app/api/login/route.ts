@@ -45,7 +45,7 @@ export async function POST(request: Request) {
 
       return responseObj;
     } 
-  } catch (error) {
+  } catch (error:any) {
     return NextResponse.json({ message: error.response.data.message }, { status: 500 });
   }
 }

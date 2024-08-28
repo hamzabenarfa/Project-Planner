@@ -1,4 +1,9 @@
-const CircleProgress = ({ progress }) => {
+
+interface CircleProgressProps {
+  progress: number;
+}
+
+const CircleProgress = ({ progress } :CircleProgressProps) => {
   const totalCircles = 10;
   const filledCircles = Math.round((progress / 100) * totalCircles);
 

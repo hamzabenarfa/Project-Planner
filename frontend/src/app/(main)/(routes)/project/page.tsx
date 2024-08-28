@@ -87,6 +87,7 @@ const Project = () => {
           <CreateNewProjectModal />
          
         </div>
+        
 
         <Button variant="ghost" className="flex items-center gap-2">
           <Pin /> Pinned Projects

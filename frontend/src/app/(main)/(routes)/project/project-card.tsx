@@ -55,13 +55,17 @@ const ProjectCard = ({
   const statusColorClass =
     statusColors[status.toLowerCase()] || statusColors.default;
 
-  const navigateToProject = () => router.push(`/planner/project/${id}`);
+  const navigateToProject = () => router.push(`/project/${id}`);
 
   const handlePin = (id: Id) => {
-    onPin(id);
+    if (id) {
+      onPin(id);
+    }
   };
   const handleDelete = (id: Id) => {
-    onDelete(id);
+    if (id) {
+      onDelete(id);
+    }
   };
 
   return (
@@ -87,7 +91,7 @@ const ProjectCard = ({
               <DropdownMenuLabel>
                 <div
                   onClick={() => {
-                    handlePin(id);
+                    id && handlePin(id);
                   }}
                   className="flex items-center gap-1 cursor-pointer text-orange-400"
                 >
@@ -103,7 +107,7 @@ const ProjectCard = ({
               <DropdownMenuLabel>
                 <div
                   onClick={() => {
-                    handleDelete(id);
+                    id && handleDelete(id);
                   }}
                   className="flex items-center gap-1 cursor-pointer text-red-600 "
                 >

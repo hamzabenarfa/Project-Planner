@@ -8,17 +8,22 @@ import ProfileDropdownMenu from "./profile-dropdown-menu";
 
 const Navbar = () => {
   return (
-    <nav className="fixed top-0 left-0 right-0 flex items-center justify-around p-4 border-b border-gray-300 backdrop-blur-sm bg-white bg-opacity-20 z-50 h-16">
+    <nav
+      className="fixed top-0 left-0 right-0 flex items-center justify-between p-4 border-b 
+                  border-gray-300 backdrop-blur-sm bg-white bg-opacity-20 z-50 h-16"
+    >
       <div className="flex flex-row items-center gap-4">
         <div className="text-xl">DevSync</div>
-        <p>/</p>
+        {/* <p>/</p>
         <div className=" flex items-center gap-1">
           <Avatar className=" size-8">
             <AvatarImage src="https://github.com/shadcn.png" />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
-          <p>Hamza Benarfa</p>
-        </div>
+          <Button variant="link" asChild>
+            <Link href="/profile">Hamza Benarfa</Link>
+          </Button>
+        </div> */}
       </div>
 
       <div className="flex flex-row justify-center items-center ">
@@ -27,7 +32,7 @@ const Navbar = () => {
           variant="ghost"
           className="flex flex-row items-center justify-center gap-1"
         >
-          <Link href="/planner/project">
+          <Link href="/project">
             <Folders />
             <p>Projects</p>
           </Link>
@@ -37,11 +42,12 @@ const Navbar = () => {
           variant="ghost"
           className="flex flex-row items-center justify-center gap-1"
         >
-          <Link href="/planner/teams">
+          <Link href="/teams">
             <Users />
-            <p>Teams</p>{" "}
+            <p>Teams</p>
           </Link>
         </Button>
+        
       </div>
 
       <div className="flex flex-row items-center justify-center gap-4">
