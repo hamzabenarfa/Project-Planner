@@ -1,7 +1,6 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { FC } from "react";
 import {
   EllipsisVertical,
   Pin,
@@ -22,14 +21,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Id } from "@/types/kanban.type";
-
-const statusColors: Record<string, string> = {
-  BUILDING: "bg-yellow-100",
-  INPROGRESS: "bg-blue-100",
-  pending: "bg-gray-100",
-  STARTED: "bg-blue-100",
-  default: "bg-green-100",
-} as const;
+import Link from "next/link";
+import { statusColors } from "@/constants/statusColors";
 
 interface ProjectCardProps extends ProjectType {
   onDelete: (id: Id) => void;
@@ -56,6 +49,10 @@ const ProjectCard = ({
     statusColors[status.toLowerCase()] || statusColors.default;
 
   const navigateToProject = () => router.push(`/project/${id}`);
+
+  const handleSetting = (id: Id) => {
+    console.log("setting");
+  };
 
   const handlePin = (id: Id) => {
     if (id) {
@@ -99,9 +96,12 @@ const ProjectCard = ({
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuLabel>
-                <div className="flex items-center gap-1 cursor-pointer">
+                <Link
+                  href={`/project/${id}/setting`}
+                  className="flex items-center gap-1 cursor-pointer"
+                >
                   <Settings size={18} /> Setting
-                </div>
+                </Link>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuLabel>

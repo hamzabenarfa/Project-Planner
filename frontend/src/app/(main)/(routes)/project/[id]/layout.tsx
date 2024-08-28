@@ -1,4 +1,4 @@
-import Sidebar from "./sidebar";
+import Sidebar from "./_components/sidebar";
 
 export default function ProjectLayout({
   children,

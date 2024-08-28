@@ -2,15 +2,19 @@
 
 import { Input } from "@/components/ui/input";
 import { Layers, Pin } from "lucide-react";
-import ProjectCard from "./project-card";
+import ProjectCard from "./_components/project-card";
 import { Button } from "@/components/ui/button";
-import { useDeleteProject, useGetAllMyProject, usePinProject } from "@/hooks/useProject";
-import ProjectSkeleton from "./ProjectSkeleton";
+import {
+  useDeleteProject,
+  useGetAllMyProject,
+  usePinProject,
+} from "@/hooks/useProject";
+import ProjectSkeleton from "./_components/ProjectSkeleton";
 import { useEffect, useState } from "react";
 import { Id } from "@/types/kanban.type";
 import { ProjectType } from "@/types/project.type";
 import Toast from "react-hot-toast";
-import { CreateNewProjectModal } from "./new-project-modal";
+import { CreateNewProjectModal } from "./_components/new-project-modal";
 const Project = () => {
   const { projectData, isLoading, error } = useGetAllMyProject();
   const [projects, setProjects] = useState<ProjectType[]>([]);
@@ -27,13 +31,15 @@ const Project = () => {
     deleteProject(id, {
       onSuccess: () => {
         Toast.success("Project deleted successfully");
-        setProjects(prevProjects => 
-          Array.isArray(prevProjects) ? prevProjects.filter(project => project.id !== id) : []
+        setProjects((prevProjects) =>
+          Array.isArray(prevProjects)
+            ? prevProjects.filter((project) => project.id !== id)
+            : []
         );
       },
       onError: (error) => {
         console.error("Failed to delete project:", error);
-      }
+      },
     });
   };
   const handlePin = (id: Id) => {
@@ -43,18 +49,10 @@ const Project = () => {
       },
       onError: (error) => {
         console.error("Failed to pin project:", error);
-      }
+      },
     });
   };
-  if (isLoading) {
-    return (
-      <div className="min-h-screen container">
-        <section className="space-y-4 p-4">
-          <ProjectSkeleton />
-        </section>
-      </div>
-    );
-  }
+  if (isLoading) {return <ProjectSkeleton />}
 
   const renderProjects = (pinned: boolean) => {
     if (projects && Array.isArray(projects)) {
@@ -85,9 +83,7 @@ const Project = () => {
         <div className="flex gap-2">
           <Input type="search" placeholder="Search Project" />
           <CreateNewProjectModal />
-         
         </div>
-        
 
         <Button variant="ghost" className="flex items-center gap-2">
           <Pin /> Pinned Projects

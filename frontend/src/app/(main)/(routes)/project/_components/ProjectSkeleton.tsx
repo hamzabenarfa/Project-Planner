@@ -9,6 +9,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 const ProjectSkeleton = () => {
   return (
     <div className="min-h-screen container">
+        <section className="space-y-4 p-4">
+    <div className="min-h-screen container">
       <section className="space-y-4 p-4">
         <div className="flex gap-2">
           <Input type="search" placeholder="Search Project" />
@@ -34,6 +36,8 @@ const ProjectSkeleton = () => {
           <ProjectSCardkeleton />
         </div>
       </section>
+    </div>
+    </section>
     </div>
   );
 };
