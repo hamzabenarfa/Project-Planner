@@ -47,6 +47,7 @@ enum Status {
   BUILDING
   STARTED
   PENDING
+  STOPPED
   INPROGRESS
 }
 

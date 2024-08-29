@@ -126,7 +126,7 @@ export class ProjectService {
     });
   }
 
-  async updateProjectName(projectId: number, name: string, userId: number) {
+  async patchProjectName(projectId: number, name: string, userId: number) {
     const project = await this.databaseService.project.findFirst({
       where: {
         id: projectId,
@@ -146,8 +146,7 @@ export class ProjectService {
     });
   }
 
-  async updateProjectStatus(projectId: number, status: Status, userId: number) {
-    console.log("🚀 ~ ProjectService ~ updateProjectStatus ~ status:", status)
+  async patchProjectStatus(projectId: number, status: Status, userId: number) {
     const project = await this.databaseService.project.findFirst({
       where: {
         id: projectId,
@@ -156,6 +155,12 @@ export class ProjectService {
     });
     if (!project) {
       throw new HttpException('Project not found', HttpStatus.NOT_FOUND);
+    }
+    if (project.status === status) {
+      throw new HttpException(
+        'Project status is already ' + status,
+        HttpStatus.BAD_REQUEST,
+      );
     }
     return await this.databaseService.project.update({
       where: {
@@ -166,8 +171,20 @@ export class ProjectService {
       },
     });
   }
+  async getProjectCurrentStatus(projectId: number, userId: number) {
+    const project = await this.databaseService.project.findFirst({
+      where: {
+        id: projectId,
+        ownerId: userId,
+      },
+    });
+    if (!project) {
+      throw new HttpException('Project not found', HttpStatus.NOT_FOUND);
+    }
+    return project.status;
+  }
 
-  async updateProjectIcon(projectId: number, icon: string, userId: number) {
+  async patchProjectIcon(projectId: number, icon: string, userId: number) {
     const project = await this.databaseService.project.findFirst({
       where: {
         id: projectId,

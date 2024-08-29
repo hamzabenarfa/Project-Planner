@@ -64,30 +64,37 @@ export class ProjectController {
   }
 
   @Patch('/:projectId/name')
-  updateProjectName(
+  patchProjectName(
     @GetCurrentUserId() userId: number,
     @Param('projectId', ParseIntPipe) projectId: number,
     @Body('name') name: string,
   ) {
-    return this.projectService.updateProjectName(projectId, name, userId);
+    return this.projectService.patchProjectName(projectId, name, userId);
   }
 
   @Patch('/:projectId/status')
-  updateProjectStatus(
+  patchProjectStatus(
     @GetCurrentUserId() userId: number,
     @Param('projectId', ParseIntPipe) projectId: number,
     @Body('status') status: Status,
   ) {
-    return this.projectService.updateProjectStatus(projectId, status, userId);
+    return this.projectService.patchProjectStatus(projectId, status, userId);
+  }
+  @Get('/:projectId/status')
+  getProjectCurrentStatus(
+    @GetCurrentUserId() userId: number,
+    @Param('projectId', ParseIntPipe) projectId: number,
+  ) {
+    return this.projectService.getProjectCurrentStatus(projectId, userId);
   }
   //need to use multer to upload image
   @Patch('/:projectId/icon')
-  updateProjectIcon(
+  patchProjectIcon(
     @GetCurrentUserId() userId: number,
     @Param('projectId', ParseIntPipe) projectId: number,
     @Body('icon') icon: string,
   ) {
-    return this.projectService.updateProjectIcon(projectId, icon, userId);
+    return this.projectService.patchProjectIcon(projectId, icon, userId);
   }
   
 }
