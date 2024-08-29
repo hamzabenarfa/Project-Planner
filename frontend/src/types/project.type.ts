@@ -1,3 +1,5 @@
+import { Id } from "./kanban.type";
+
 export type ProjectType = {
   id?: number;
   name: string;
@@ -10,3 +12,13 @@ export type ProjectType = {
   updatedAt: Date;
   ownerId?: number;
 };
+
+export interface PatchProjectName {
+  id: Id;
+  name: string;
+}
+
+export interface ProjectStatus {
+  id: Id;
+  status: string;
+}

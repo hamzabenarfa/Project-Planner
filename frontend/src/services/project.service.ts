@@ -77,7 +77,6 @@ class ProjectService {
       const response = await api.patch<string>(`/project/${projectId}/name`, {
         name: projectName,
       });
-      console.log("🚀 ~ ProjectService ~ patchProjectName ~ response:", response)
       return {
         success: true,
         data: response.data,
@@ -86,7 +85,30 @@ class ProjectService {
       throw error.response.data.message;
     }
   }
-
+  async patchProjectStatus(id: Id, status: string): Promise<Response<string>> {
+    try {
+      const response = await api.patch<string>(`/project/${id}/status`, {
+        status,
+      });
+      return {
+        success: true,
+        data: response.data,
+      };
+    } catch (error: any) {
+      throw error.response.data.message;
+    }
+  }
+  async getProjectCurrentStatus(projectId:Id): Promise<Response<any>> {
+    try {
+      const response = await api.get<string>(`/project/${projectId}/status`);
+      return {
+        success: true,
+        data: response.data,
+      };
+    } catch (error: any) {
+      throw error.response.data.message;
+    }
+  }    
 }
 
 export default new ProjectService();
