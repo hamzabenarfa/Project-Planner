@@ -1,3 +1,4 @@
+"use client"
 import { Button } from "@/components/ui/button";
 import SettingCard from "./_components/setting-card";
 import { Input } from "@/components/ui/input";
@@ -12,8 +13,21 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { statusColors } from "@/constants/statusColors";
+import { usePatchProjectName } from "@/hooks/useProject";
+import { useState } from "react";
+import { useParams } from "next/navigation";
 
 const Setting = () => {
+  const param = useParams();
+  const [projectName, setProjectName] = useState("");
+  const {patchProjectName, status, error} = usePatchProjectName();
+  const handlePatchProjectName = () => {
+    if (projectName) {
+      patchProjectName({id: parseInt(param.id[0]), name: projectName});
+    }
+  }
+
+
   return (
     <div className="space-y-4">
       <SettingCard
@@ -27,8 +41,9 @@ const Setting = () => {
               id="name"
               placeholder="Name of your project"
               className="h-11"
+              onChange={(e) => setProjectName(e.target.value)}
             />
-            <Button size="lg">Update</Button>
+            <Button size="lg" onClick={handlePatchProjectName}>Update</Button>
           </div>
         </div>
       </SettingCard>

@@ -7,7 +7,6 @@ class ProjectService {
   async getProjects(): Promise<Response<ProjectType[]>> {
     try {
       const response = await api.get<ProjectType[]>("/project/progress");
-      console.log("🚀 ~ ProjectService ~ getProjects ~ response:", response.data)
       return {
         success: true,
         data: response.data,
@@ -16,7 +15,6 @@ class ProjectService {
       throw error.response.data.message;
     }
   }
-
   async getPinnedProjects(): Promise<Response<ProjectType[]>> {
     try {
       const response = await api.get<ProjectType[]>("/project/pinned");
@@ -74,6 +72,21 @@ class ProjectService {
       throw error.response.data.message;
     }
   }
+  async patchProjectName(projectId: Id, projectName: string): Promise<Response<string>> {
+    try {
+      const response = await api.patch<string>(`/project/${projectId}/name`, {
+        name: projectName,
+      });
+      console.log("🚀 ~ ProjectService ~ patchProjectName ~ response:", response)
+      return {
+        success: true,
+        data: response.data,
+      };
+    } catch (error: any) {
+      throw error.response.data.message;
+    }
+  }
+
 }
 
 export default new ProjectService();

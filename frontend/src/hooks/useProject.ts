@@ -48,3 +48,16 @@ export const useDeleteProject = () => {
   });
   return { deleteProject: mutate, status, error };
 };
+
+interface PatchProjectName {
+  id: Id;
+  name: string;
+}
+
+export const usePatchProjectName =()=>{
+  const {mutate, status, error} = useMutation({
+    mutationKey: [`patch-project-name`],
+    mutationFn: ({id, name}:PatchProjectName) => projectService.patchProjectName(id, name),
+  });
+  return {patchProjectName: mutate, status, error};
+}
