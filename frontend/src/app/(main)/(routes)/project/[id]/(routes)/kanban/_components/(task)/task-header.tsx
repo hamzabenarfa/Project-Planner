@@ -1,6 +1,6 @@
 import TaskCardDrawer from "./TaskCardDrawer";
 
-const TaskNav = () => {
+const TaskHeader = () => {
   return (
     <nav className=" w-full flex justify-between items-center ">
         <div className=" flex gap-1">
@@ -16,4 +16,4 @@ const TaskNav = () => {
   );
 };
 
-export default TaskNav;
+export default TaskHeader;

@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { format } from "date-fns";
 import { ListFilter } from "lucide-react";
-import { CreateTaskModal } from "./create-task-modal";
+import { CreateTaskModal } from "./(task)/create-task-modal";
 import { Id } from "@/types/kanban.type";
 import { Id } from "react-beautiful-dnd";
 import { useCreateTask } from "@/hooks/useTask";

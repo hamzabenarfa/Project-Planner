@@ -18,7 +18,7 @@ import {
 } from "@dnd-kit/core";
 import { SortableContext, arrayMove } from "@dnd-kit/sortable";
 import { createPortal } from "react-dom";
-import TaskCard from "./_components/TaskCard";
+import TaskCard from "./_components/(task)/TaskCard";
 import api from "@/lib/axios-instance";
 import { useParams } from "next/navigation";
 import KanbanNavbar from "./_components/kanban-navbar";

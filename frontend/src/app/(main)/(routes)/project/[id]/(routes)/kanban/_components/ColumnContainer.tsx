@@ -3,7 +3,7 @@ import { SortableContext, useSortable } from "@dnd-kit/sortable";
 import { Column, Id, Task } from "@/types/kanban.type";
 import { CSS } from "@dnd-kit/utilities";
 import { useMemo, useState } from "react";
-import TaskCard from "./TaskCard";
+import TaskCard from "./(task)/TaskCard";
 import { EllipsisVertical, Plus, PlusCircle, Trash } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 
@@ -36,7 +36,7 @@ function ColumnContainer({ column, createTask, tasks }: Props) {
       ref={setNodeRef}
       style={style}
       className="
-      border-2 md:w-[300px] h-[600px] max-h-[70vh] rounded-3xl flex flex-col "
+      border-2 md:w-[300px]  h-[600px] max-h-[70vh] rounded-3xl flex flex-col "
     >
       {/* Column title */}
       <div className="text-md h-[60px] p-4 font-bold flex items-center justify-between">
