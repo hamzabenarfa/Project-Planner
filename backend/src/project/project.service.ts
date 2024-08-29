@@ -11,6 +11,17 @@ export class ProjectService {
     private readonly projectKpiService: ProjectKpiService,
   ) {}
 
+  async getBurnDownChart(projectId: number) {
+    const project = await this.getProjectById(projectId);
+    const taskStatusCount =
+      await this.projectKpiService.taskStatusCount(projectId);
+    return {
+      dateStart: project.createdAt,
+      dateEnd: project.endDate,
+      ...taskStatusCount,
+    };
+  }
+
   async createProject(dto: CreateProjectDto, userId: number) {
     const projectExist = await this.databaseService.project.findFirst({
       where: {
@@ -203,6 +214,18 @@ export class ProjectService {
     //     icon: icon,
     //   },
     // });
+  }
+
+  private async getProjectById(projectId: number) {
+    const project = await this.databaseService.project.findFirst({
+      where: {
+        id: projectId,
+      },
+    });
+    if (!project) {
+      throw new HttpException('Project not found', HttpStatus.NOT_FOUND);
+    }
+    return project;
   }
 
   private async deleteRelatedRecords(projectId: number) {

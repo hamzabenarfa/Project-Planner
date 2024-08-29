@@ -1,24 +1,22 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
+import { ColumnType } from '@prisma/client';
 import { DatabaseService } from 'src/database/database.service';
+import { TasksService } from 'src/tasks/tasks.service';
 
 @Injectable()
 export class ProjectKpiService {
-  constructor(private readonly databaseService: DatabaseService) {}
+  constructor(
+    private readonly databaseService: DatabaseService,
+    private readonly tasksService: TasksService,
+  ) {}
 
   async getMyProjectProgress(projectId: number) {
-    const doneColumn = await this.databaseService.column.findFirst({
-      where: {
-        kanbanId: projectId,
-        columnType: 'DONE',
-      },
-    });
-    const completedTasks = await this.databaseService.task.count({
-      where: {
-        columnId: doneColumn.id,
-      },
-    });
+    const completedTasks = await this.tasksService.countTotalTasksByColumnTypes(
+      projectId,
+      ColumnType.InReview,
+    );
 
-    const totalTasks = await this.getProjectTotalTasks(projectId);
+    const totalTasks = await this.tasksService.getProjectTotalTasks(projectId);
 
     return {
       completedTasks,
@@ -27,13 +25,31 @@ export class ProjectKpiService {
     };
   }
 
-  private async getProjectTotalTasks(kanbanId: number) {
-    const kanban = await this.databaseService.kanban.findFirst({
-      where: { id: kanbanId },
-    });
-    if (!kanban) {
-      throw new HttpException('kanban not found', HttpStatus.NOT_FOUND);
-    }
-    return kanban.totalTasks;
+  async taskStatusCount(projectId: number) {
+    const [todo, inProgress, inReview, done] = await Promise.all([
+      this.tasksService.countTotalTasksByColumnTypes(
+        projectId,
+        ColumnType.TODO,
+      ),
+      this.tasksService.countTotalTasksByColumnTypes(
+        projectId,
+        ColumnType.INPROGRESS,
+      ),
+      this.tasksService.countTotalTasksByColumnTypes(
+        projectId,
+        ColumnType.InReview,
+      ),
+      this.tasksService.countTotalTasksByColumnTypes(
+        projectId,
+        ColumnType.DONE,
+      ),
+    ]);
+
+    return {
+      todo,
+      inProgress,
+      inReview,
+      done,
+    };
   }
 }

@@ -11,9 +11,13 @@ import { ProjectMemebersModule } from './project_memebers/project_memebers.modul
 import { KanbanModule } from './kanban/kanban.module';
 import { ColumnModule } from './column/column.module';
 import { TasksModule } from './tasks/tasks.module';
+import { BurndownModule } from './burndown/burndown.module';
+import { ScheduleModule } from '@nestjs/schedule';
+import { SeedModule } from './seed/seed.module';
 
 @Module({
   imports: [
+    ScheduleModule.forRoot(),
     AuthModule,
     DatabaseModule,
     ProjectModule,
@@ -24,8 +28,9 @@ import { TasksModule } from './tasks/tasks.module';
     KanbanModule,
     ColumnModule,
     TasksModule,
+    BurndownModule,
+    SeedModule,
   ],
-  controllers: [],
   providers: [
     {
       provide: APP_GUARD,

@@ -2,6 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { DatabaseService } from 'src/database/database.service';
 import { KanbanService } from 'src/kanban/kanban.service';
+import { ColumnType } from '@prisma/client';
 
 @Injectable()
 export class TasksService {
@@ -115,5 +116,61 @@ export class TasksService {
     });
 
     return movedTask;
+  }
+
+  public async getTasksByColumnTypes(
+    kanbanId: number,
+    columnTypes: ColumnType,
+  ) {
+    const selectedColumn = await this.databaseService.column.findFirst({
+      where: {
+        kanbanId,
+        columnType: columnTypes,
+      },
+    });
+    const tasks = await this.databaseService.task.findMany({
+      where: {
+        columnId: selectedColumn.id,
+      },
+    });
+
+    return tasks;
+  }
+  public async countTotalTasksByColumnTypes(
+    kanbanId: number,
+    columnTypes: ColumnType,
+  ) {
+    const columnExists = await this.databaseService.column.findFirst({
+      where: {
+        kanbanId,
+        columnType: columnTypes,
+      },
+    });
+    if (!columnExists) {
+      return 0;
+    }
+    const selectedColumn = await this.databaseService.column.findFirst({
+      where: {
+        kanbanId,
+        columnType: columnTypes,
+      },
+    });
+    const count = await this.databaseService.task.count({
+      where: {
+        columnId: selectedColumn.id,
+      },
+    });
+
+    return count;
+  }
+
+  async getProjectTotalTasks(kanbanId: number) {
+    const kanban = await this.databaseService.kanban.findFirst({
+      where: { id: kanbanId },
+    });
+    if (!kanban) {
+      throw new HttpException('kanban not found', HttpStatus.NOT_FOUND);
+    }
+    return kanban.totalTasks;
   }
 }

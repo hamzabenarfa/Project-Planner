@@ -56,15 +56,17 @@ model Project {
   name   String
   status Status @default(PENDING)
 
-  pinned    Boolean  @default(false)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  pinned    Boolean   @default(false)
+  endDate   DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 
   projectMembers ProjectMember[]
   User           User?           @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   ownerId        Int?
 
-  kanban Kanban?
+  kanban           Kanban?
+  BurnDownSnapshot BurnDownSnapshot[]
 
   @@unique([name, ownerId])
   @@map("projects")
@@ -112,7 +114,7 @@ model Resource {
 model Kanban {
   id Int @id @default(autoincrement())
 
-  totalTasks          Int @default(0)
+  totalTasks Int @default(0)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -126,7 +128,6 @@ model Kanban {
   @@map("kanbans")
 }
 
-
 enum ColumnType {
   TODO
   INPROGRESS
@@ -135,12 +136,12 @@ enum ColumnType {
 }
 
 model Column {
-  id        Int     @id @default(autoincrement())
-  name      String
-  done      Boolean @default(false)
+  id         Int        @id @default(autoincrement())
+  name       String
+  done       Boolean    @default(false)
   columnType ColumnType
 
-  kanbanId  Int
+  kanbanId Int
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -153,16 +154,30 @@ model Column {
 }
 
 model Task {
-  id        Int      @id @default(autoincrement())
-  name      String
-  
-  description String? @db.LongText
-  columnId  Int
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id   Int    @id @default(autoincrement())
+  name String
+
+  description String?  @db.LongText
+  columnId    Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   column Column @relation(fields: [columnId], references: [id])
 
   @@unique([name, columnId])
   @@map("tasks")
+}
+
+model BurnDownSnapshot {
+  id              Int      @id @default(autoincrement())
+  projectId       Int
+  date            DateTime @default(now())
+  todoCount       Int
+  inProgressCount Int
+  inReviewCount   Int
+  doneCount       Int
+
+  project Project @relation(fields: [projectId], references: [id])
+
+  @@map("burn_down_snapshots")
 }

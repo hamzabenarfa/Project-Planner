@@ -96,5 +96,9 @@ export class ProjectController {
   ) {
     return this.projectService.patchProjectIcon(projectId, icon, userId);
   }
-  
+
+  @Get('/:projectId/burndown')
+  getProjectBurndown(@Param('projectId', ParseIntPipe) projectId: number) {
+    return this.projectService.getBurnDownChart(projectId);
+  }
 }

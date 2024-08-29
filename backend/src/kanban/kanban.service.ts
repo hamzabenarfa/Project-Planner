@@ -28,5 +28,4 @@ export class KanbanService {
       throw new Error('Failed to update totalTasks');
     }
   }
-
 }

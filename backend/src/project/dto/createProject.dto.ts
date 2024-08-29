@@ -41,4 +41,8 @@ export class CreateProjectDto {
   @IsOptional()
   @IsDate()
   updatedAt: Date;
+
+  @IsOptional()
+  @IsDate()
+  endDate: Date;
 }
