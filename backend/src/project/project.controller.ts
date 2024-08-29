@@ -7,12 +7,14 @@ import {
   HttpStatus,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
   Put,
 } from '@nestjs/common';
 import { ProjectService } from './project.service';
 import { GetCurrentUserId } from 'src/common/decorators';
 import { CreateProjectDto } from './dto';
+import { Status } from '@prisma/client';
 
 @Controller('project')
 export class ProjectController {
@@ -60,4 +62,32 @@ export class ProjectController {
   ) {
     return this.projectService.deleteProject(projectId, userId);
   }
+
+  @Patch('/:projectId/name')
+  updateProjectName(
+    @GetCurrentUserId() userId: number,
+    @Param('projectId', ParseIntPipe) projectId: number,
+    @Body('name') name: string,
+  ) {
+    return this.projectService.updateProjectName(projectId, name, userId);
+  }
+
+  @Patch('/:projectId/status')
+  updateProjectStatus(
+    @GetCurrentUserId() userId: number,
+    @Param('projectId', ParseIntPipe) projectId: number,
+    @Body('status') status: Status,
+  ) {
+    return this.projectService.updateProjectStatus(projectId, status, userId);
+  }
+  //need to use multer to upload image
+  @Patch('/:projectId/icon')
+  updateProjectIcon(
+    @GetCurrentUserId() userId: number,
+    @Param('projectId', ParseIntPipe) projectId: number,
+    @Body('icon') icon: string,
+  ) {
+    return this.projectService.updateProjectIcon(projectId, icon, userId);
+  }
+  
 }

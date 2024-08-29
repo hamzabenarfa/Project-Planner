@@ -2,6 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { DatabaseService } from 'src/database/database.service';
 import { CreateProjectDto } from './dto';
 import { ProjectKpiService } from './kpi/project-kpi.service';
+import { Status } from '@prisma/client';
 
 @Injectable()
 export class ProjectService {
@@ -123,6 +124,68 @@ export class ProjectService {
         pinned: !project.pinned,
       },
     });
+  }
+
+  async updateProjectName(projectId: number, name: string, userId: number) {
+    const project = await this.databaseService.project.findFirst({
+      where: {
+        id: projectId,
+        ownerId: userId,
+      },
+    });
+    if (!project) {
+      throw new HttpException('Project not found', HttpStatus.NOT_FOUND);
+    }
+    return await this.databaseService.project.update({
+      where: {
+        id: projectId,
+      },
+      data: {
+        name: name,
+      },
+    });
+  }
+
+  async updateProjectStatus(projectId: number, status: Status, userId: number) {
+    console.log("🚀 ~ ProjectService ~ updateProjectStatus ~ status:", status)
+    const project = await this.databaseService.project.findFirst({
+      where: {
+        id: projectId,
+        ownerId: userId,
+      },
+    });
+    if (!project) {
+      throw new HttpException('Project not found', HttpStatus.NOT_FOUND);
+    }
+    return await this.databaseService.project.update({
+      where: {
+        id: projectId,
+      },
+      data: {
+        status: status,
+      },
+    });
+  }
+
+  async updateProjectIcon(projectId: number, icon: string, userId: number) {
+    const project = await this.databaseService.project.findFirst({
+      where: {
+        id: projectId,
+        ownerId: userId,
+      },
+    });
+    if (!project) {
+      throw new HttpException('Project not found', HttpStatus.NOT_FOUND);
+    }
+    return;
+    // return await this.databaseService.project.update({
+    //   where: {
+    //     id: projectId,
+    //   },
+    //   data: {
+    //     icon: icon,
+    //   },
+    // });
   }
 
   private async deleteRelatedRecords(projectId: number) {
