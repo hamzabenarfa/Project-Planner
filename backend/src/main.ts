@@ -8,7 +8,7 @@ async function bootstrap() {
     origin: true,
     credentials: true,
     exposedHeaders: 'Set-Cookie',
-    methods: ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS'],
+    methods: ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS', 'PATCH'],
     allowedHeaders: [
       'Access-Control-Allow-Origin',
       'Content-Type',
