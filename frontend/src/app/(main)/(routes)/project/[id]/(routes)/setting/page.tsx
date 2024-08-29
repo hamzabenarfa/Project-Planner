@@ -4,10 +4,10 @@ import SettingCard from "./_components/setting-card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-
 import { useParams } from "next/navigation";
-import SettingProjectStatus from "./_components/setting-project-status";
-import SettingProjectName from "./_components/setting-project-name";
+import ProjectStatusSetting from "./_components/setting-project-status";
+import ProjectNameSetting from "./_components/setting-project-name";
+import ProjectDeleteSetting from "./_components/setting-delete-project";
 
 const Setting = () => {
   const param = useParams();
@@ -15,7 +15,7 @@ const Setting = () => {
 
   return (
     <div className="space-y-4">
-      <SettingProjectName id={projectIid} />
+      <ProjectNameSetting id={projectIid} />
 
       <SettingCard
         name="Project Icon"
@@ -35,18 +35,9 @@ const Setting = () => {
         </div>
       </SettingCard>
 
-      <SettingProjectStatus id={projectIid} />
+      <ProjectStatusSetting id={projectIid} />
 
-      <SettingCard
-        name="Delete Project"
-        description="To delete your project, click the button below"
-      >
-        <div className="flex items-center gap-1">
-          <Button size="lg" variant="destructive">
-            Delete Project
-          </Button>
-        </div>
-      </SettingCard>
+      <ProjectDeleteSetting id={projectIid} />
     </div>
   );
 };

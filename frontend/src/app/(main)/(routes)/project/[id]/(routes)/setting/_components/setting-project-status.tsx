@@ -18,9 +18,8 @@ import {
   usePatchProjectStatus,
 } from "@/hooks/useProject";
 import { useEffect, useState } from "react";
-import Toast from "react-hot-toast";
 
-const SettingProjectStatus = ({ id }: { id: number }) => {
+const ProjectStatusSetting = ({ id }: { id: number }) => {
   const { projectData, isLoading, status, error } =
     useGetProjectCurrentStatus(id);
   const {
@@ -92,4 +91,4 @@ const SettingProjectStatus = ({ id }: { id: number }) => {
   );
 };
 
-export default SettingProjectStatus;
+export default ProjectStatusSetting;

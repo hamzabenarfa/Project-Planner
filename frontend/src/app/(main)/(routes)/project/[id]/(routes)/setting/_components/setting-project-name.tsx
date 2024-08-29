@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { usePatchProjectName } from "@/hooks/useProject";
 import { useState } from "react";
 
-const SettingProjectName = ({id}:{id:number}) => {
+const ProjectNameSetting = ({id}:{id:number}) => {
     const [projectName, setProjectName] = useState("");
     const {patchProjectName, status, error} = usePatchProjectName();
     const handlePatchProjectName = () => {
@@ -36,4 +36,4 @@ const SettingProjectName = ({id}:{id:number}) => {
      );
 }
  
-export default SettingProjectName;
+export default ProjectNameSetting;

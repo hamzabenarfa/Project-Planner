@@ -45,14 +45,9 @@ const ProjectCard = ({
   const formattedDate = formatDistanceToNow(new Date(updatedAt), {
     addSuffix: true,
   });
-  const statusColorClass =
-    statusColors[status.toLowerCase()] || statusColors.default;
+  const statusColorClass = statusColors[status] || statusColors.default;
 
   const navigateToProject = () => router.push(`/project/${id}`);
-
-  const handleSetting = (id: Id) => {
-    console.log("setting");
-  };
 
   const handlePin = (id: Id) => {
     if (id) {
