@@ -15,26 +15,20 @@ import Link from "next/link";
 import { useState } from "react";
 import Toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
-import axios from "axios";
 import { login } from "./login";
 
-type LoginResponse = {
-  message: string;
-  role: string;
-};
+
 const Login = () => {
   const router = useRouter();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setError("");
 
     if (!email || !password) {
-      setError("Please fill in all fields");
+      Toast.error("Please fill in all fields");
       return;
     }
     const { data, role, error } = await login(email, password);
@@ -87,7 +81,6 @@ const Login = () => {
               Register
             </Link>
           </p>
-          {error && <p>{error}</p>}
         </CardFooter>
       </Card>
     </div>

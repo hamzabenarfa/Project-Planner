@@ -1,3 +1,4 @@
+"use client";
 import Image from "next/image";
 import {
   Card,
@@ -18,38 +19,76 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
+import { useState } from "react";
+import Toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
+import { register } from "./register";
 const Register = () => {
+  const router = useRouter();
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [role, setRole] = useState("");
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (!email || !password) {
+      Toast.error("Please fill in all fields");
+      return;
+    }
+    console.log(role)
+    const { data, roleUser, error } = await register(email, password, role);
+
+    error ? Toast.error(error) : Toast.success(data.message);
+    roleUser === "MANAGER" ? router.push("/project") : router.push("/register");
+  };
+
   return (
-    <div className=" container min-h-screen flex items-center justify-between ">
-      <Image src="/svg/register.svg" alt="login" width={500} height={500} />
+    <div className="container min-h-screen flex items-center justify-center md:justify-around">
+      <Image
+        src="/svg/register.svg"
+        alt="login"
+        className="hidden md:block"
+        width={500}
+        height={500}
+      />
 
       <Card>
         <CardHeader>
           <CardTitle>Register</CardTitle>
           <CardDescription> Please Register to our platform </CardDescription>
         </CardHeader>
-        <CardContent className=" w-full space-y-4">
-          <div>
-            <Label htmlFor="email">Your email address</Label>
-            <Input  id="email" type="email" />
+        <CardContent >
+          <form onSubmit={handleSubmit} className=" w-full space-y-4">
+            <div>
+              <Label htmlFor="email">Your email address</Label>
+              <Input
+                id="email"
+                type="email"
+                onChange={(e) => setEmail(e.target.value)}
+              />
 
-            <Label htmlFor="password">Your Password</Label>
-            <Input id="password" type="password" />
-          </div>
+              <Label htmlFor="password">Your Password</Label>
+              <Input
+                id="password"
+                type="password"
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </div>
 
-          <Select>
-            <SelectTrigger className="w-full">
-              <SelectValue placeholder="Role" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="PERSONAL">Personal</SelectItem>
-              <SelectItem value="PRO">Pro</SelectItem>
-              <SelectItem value="ENTREPRISE">Enterprise</SelectItem>
-            </SelectContent>
-          </Select>
+            <Select value={role} onValueChange={(value) => setRole(value)}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Role" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="MEMBER">Developer</SelectItem>
+                <SelectItem value="MANAGER">Manager</SelectItem>
+              </SelectContent>
+            </Select>
 
-          <Button className=" w-full">Login</Button>
+            <Button className=" w-full">Login</Button>
+          </form>
         </CardContent>
         <CardFooter>
           <p className="font-light text-xs text-gray-500">
