@@ -1,4 +1,5 @@
 import { Id } from "./kanban.type";
+import { User } from "./user.type";
 
 export type ProjectType = {
   id?: number;
@@ -22,3 +23,10 @@ export interface ProjectStatus {
   id: Id;
   status: string;
 }
+
+export type ProjectMembers = {
+  id: Id;
+  userId: Id;
+  projectId: Id;
+  user: User;
+};

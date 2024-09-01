@@ -38,12 +38,11 @@ export class AuthService {
     return tokens;
   }
   async signinLocal(dto: AuthDto): Promise<Tokens> {
-    const user = await this.prisma.user.findUnique({
+    const user = await this.prisma.user.findFirst({
       where: {
-        email: dto.email,
+        email: dto.email.trim(),
       },
     });
-
     if (!user) throw new ForbiddenException('User doesnt exist');
 
     const passwordMatches = await argon.verify(user.hash, dto.password);

@@ -17,6 +17,7 @@ export class TeamController {
 
   @Get('/mine')
   getMyTeam(@GetCurrentUserId() userId: number) {
+    console.log(userId)
     return this.teamService.getMyTeam(userId);
   }
 }

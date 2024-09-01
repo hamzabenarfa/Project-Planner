@@ -14,43 +14,33 @@ import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { useState } from "react";
 import Toast from "react-hot-toast";
-import { useRouter } from 'next/navigation'
+import { useRouter } from "next/navigation";
+import axios from "axios";
+import { login } from "./login";
 
-type LoginResponse ={
-  message:string;
-  role:string
-}
+type LoginResponse = {
+  message: string;
+  role: string;
+};
 const Login = () => {
-  const router = useRouter()
+  const router = useRouter();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError("");
 
-    try {
-      const response = await fetch('/api/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const data:LoginResponse = await response.json();
-      Toast.success(data.message)
-
-      if (response.ok) {
-        data.role === "MANAGER" ? router.push("/project") : router.push("/")
-      } 
-    } catch (error:any) {
-      Toast.error(error)
+    if (!email || !password) {
+      setError("Please fill in all fields");
+      return;
     }
+    const { data, role, error } = await login(email, password);
+
+    error ? Toast.error(error) : Toast.success(data.message);
+    role === "MANAGER" ? router.push("/project") : router.push("/login");
   };
   return (
     <div className="container min-h-screen flex items-center justify-center md:justify-around">

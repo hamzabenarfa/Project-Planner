@@ -14,7 +14,7 @@ export default function Page() {
      project dashboard
      </h1>
       <Card className=" w-2/3">
-        <BurnDownChart projectId={param.id[0]} />
+        {/* <BurnDownChart projectId={param.id[0]} /> */}
       </Card>
     </div>
   );

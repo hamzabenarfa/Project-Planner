@@ -22,10 +22,10 @@ const SettingLayout = ({
       name: "Team",
       href: `/project/${projectId}/setting/team`,
     },
-    // {
-    //   name: "Cards",
-    //   href: `/project/${projectId}/setting/cards`,
-    // },
+    {
+      name: "Team Members",
+      href: `/project/${projectId}/setting/team-members`,
+    },
   ];
 
   const pathname = usePathname();

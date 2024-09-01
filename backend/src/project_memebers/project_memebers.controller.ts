@@ -1,4 +1,11 @@
-import { Controller, Post, Param, ParseIntPipe, Get } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Param,
+  ParseIntPipe,
+  Get,
+  Delete,
+} from '@nestjs/common';
 import { ProjectMemebersService } from './project_memebers.service';
 
 @Controller('project-memebers')
@@ -18,5 +25,12 @@ export class ProjectMemebersController {
   @Get('/:projectId/members')
   getProjectMembers(@Param('projectId', ParseIntPipe) projectId: number) {
     return this.projectMemebersService.getProjectMembers(projectId);
+  }
+
+  @Delete('remove-member/:projectMemberId')
+  removeMember(
+    @Param('projectMemberId', ParseIntPipe) projectMemberId: number,
+  ) {
+    return this.projectMemebersService.removeMember(projectMemberId);
   }
 }

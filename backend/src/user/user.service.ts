@@ -21,6 +21,7 @@ export class UserService {
       data: {
         email: dto.email,
         hash,
+        role: dto.role,
       },
     });
     return { id: newUser.id, email: newUser.email, role: newUser.role };

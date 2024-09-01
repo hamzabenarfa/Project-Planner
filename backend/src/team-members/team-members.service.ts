@@ -3,6 +3,7 @@ import { CreateTeamMemberDto } from './dto/create-team-member.dto';
 import { DatabaseService } from 'src/database/database.service';
 import { UserService } from 'src/user/user.service';
 import { TeamService } from 'src/team/team.service';
+import { Role } from '@prisma/client';
 
 @Injectable()
 export class TeamMembersService {
@@ -15,6 +16,7 @@ export class TeamMembersService {
     const userCreated = await this.userService.createUser({
       email: dto.email,
       password: dto.password,
+      role: Role.MEMBER,
     });
     const MyTeamId = await this.teamService.getMyTeamId(userId);
     return this.prisma.teamMember.create({

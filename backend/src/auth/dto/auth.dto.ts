@@ -17,7 +17,7 @@ export class AuthDto {
   @IsString()
   password: string;
 
-  @IsEnum(Role)
   @IsOptional()
+  @IsEnum(Role)
   role: Role;
 }

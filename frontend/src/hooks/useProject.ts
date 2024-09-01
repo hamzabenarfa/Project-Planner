@@ -69,7 +69,7 @@ export const usePatchProjectStatus = () => {
         queryKey: ["projects", "patch-project-status"],
       });
     },
-    onError: (error) => {
+    onError: (error:any) => {
       Toast.error(error); 
     },
   });
