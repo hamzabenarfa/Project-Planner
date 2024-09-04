@@ -27,7 +27,6 @@ function TaskCard({ task }: Props) {
     transition,
     transform: CSS.Transform.toString(transform),
   };
-
   if (isDragging) {
     return (
       <div
@@ -45,7 +44,7 @@ function TaskCard({ task }: Props) {
       {...listeners}
       className={`p-2.5 h-[100px] min-h-[300px] flex flex-col items-start gap-4 text-left  rounded-3xl hover:ring-2 hover:ring-inse hover:ring-blue-300 cursor-grab relative bg-gradient-to-r from-cyan-200 to-blue-300`}
     >
-      <TaskHeader />
+      <TaskHeader task={task} />
 
       <p className="w-full whitespace-pre-wrap text-xl font-semibold text-white">
         {task.name}

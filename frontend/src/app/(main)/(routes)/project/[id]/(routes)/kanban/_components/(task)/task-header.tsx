@@ -1,6 +1,8 @@
-import TaskCardDrawer from "./TaskCardDrawer";
+import TaskCardDrawer from "./_drawer/TaskCardDrawer";
+import { Task } from "@/types/task.type";
 
-const TaskHeader = () => {
+const TaskHeader = ({task}:{task:Task}) => {
+  console.log("🚀 ~ TaskHeader ~ task:", task)
   return (
     <nav className=" w-full flex justify-between items-center ">
         <div className=" flex gap-1">
@@ -11,7 +13,7 @@ const TaskHeader = () => {
             <p className=" font-medium text-sm text-blue-400/85">#Client</p>
           </div>
         </div>
-        <TaskCardDrawer />
+        <TaskCardDrawer task={task}/>
       </nav>
   );
 };

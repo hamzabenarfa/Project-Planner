@@ -94,7 +94,7 @@ const Register = () => {
           <p className="font-light text-xs text-gray-500">
             You have an account?{" "}
             <Link href="/login" className="text-green-700 underline">
-              Login
+              Register
             </Link>
           </p>
         </CardFooter>
